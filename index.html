@@ -21,12 +21,17 @@
 
     <div>
         <label>Địa chỉ Email</label>
-        <input id="myEmail" type="text" name="propertyAddress" disabled placeholder="...">
+        <input id="myEmail" type="text" name="propertyAddress" placeholder="...">
     </div>
 
     <div>
+
         <label>Chọn các file upload</label>
-        <input type="file" id="file" multiple onchange="HienThiCacFile();" />
+
+        <!-- directory="" webkitdirectory="" moxdirectory=""  -->
+        <input type="file" id="file" multiple 
+        
+        onchange="HienThiCacFile();" />
 
         <br />
         <p id="trangThai">Chưa chọn file</p>

@@ -49,7 +49,7 @@ function HienThiCacFile() {
 //----------------------
 
 function excelFileToJSON(file) {
-    let output = {}
+    //let output = {}
     try {
         let reader = new FileReader();
         reader.readAsBinaryString(file);
@@ -79,10 +79,13 @@ function excelFileToJSON(file) {
             let danhMuc = {};
             danhMuc[dm] = roaDanhMuc;
 
-            output = {
+            let output = {
                 ...thongTin,
                 ...danhMuc
             }
+            console.log(output);
+            return output;
+
 
         }
     }
@@ -90,10 +93,11 @@ function excelFileToJSON(file) {
         console.error(e);
     }
 
-    return output;
+
 }
 
 let dataJson = {}
+
 function UploadCacFile() {
     var files = document.getElementById('file').files;
     if (files.length == 0) {
@@ -109,14 +113,13 @@ function UploadCacFile() {
         return;
     }
 
-    console.log(excelFileToJSON(files[0]));
 
     dataJson = excelFileToJSON(files[0]);
 
-    //console.log(dataJson);
+    console.log(dataJson);
 
     // log("UploadCacFile");
-    log(dataJson);
+    //log(dataJson);
 
 }
 
