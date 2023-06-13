@@ -1,6 +1,4 @@
 # bbnt
-https://github.com/tin86pc/bbnt
-
 https://tin86pc.github.io/bbnt
 
 
