@@ -1,3 +1,14 @@
+// thêm cdn
+var cdn = document.createElement('script');
+cdn.setAttribute('src', 'https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js');
+document.head.appendChild(cdn);
+cdn.setAttribute('src', 'https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.37.9/docxtemplater.min.js');
+document.head.appendChild(cdn);
+
+
+
+
+
 
 // lấy dữ liệu từ google app script
 (function () {
@@ -49,7 +60,6 @@ function HienThiCacFile() {
 //----------------------
 
 function excelFileToJSON(file) {
-    //let output = {}
     try {
         let reader = new FileReader();
         reader.readAsBinaryString(file);
@@ -57,7 +67,6 @@ function excelFileToJSON(file) {
             let workbook = XLSX.read(e.target.result, {
                 type: 'binary'
             });
-
 
             const tt = "thong tin";
             let roaThongTin = XLSX.utils.sheet_to_json(workbook.Sheets[tt], { header: "A" });
@@ -67,7 +76,6 @@ function excelFileToJSON(file) {
             }
             let thongTin = {};
             thongTin[tt] = roaThongTin;
-
 
 
             const dm = 'danh muc';
@@ -83,9 +91,9 @@ function excelFileToJSON(file) {
                 ...thongTin,
                 ...danhMuc
             }
+
             console.log(output);
             return output;
-
 
         }
     }
@@ -96,33 +104,54 @@ function excelFileToJSON(file) {
 
 }
 
-let dataJson = {}
 
 function UploadCacFile() {
     var files = document.getElementById('file').files;
     if (files.length == 0) {
         alert("Chưa chọn được file");
         return;
+    } else {
+        log(`Đang xử lý ${files.length} file`)
     }
 
-    var filename = files[0].name;
-    var extension = filename.substring(filename.lastIndexOf(".")).toUpperCase();
+    // lấy ra file excell trong các file đã chọn
+    let FileExcell;
 
-    if (extension != '.XLS' && extension != '.XLSX') {
+    for (i = 0; i < files.length; i++) {
+        const filename = files[i].name;
+        const extension = filename.substring(filename.lastIndexOf(".")).toUpperCase();
+
+        // Kiểm tra có phải là file excell không
+        if (extension === '.XLS' || extension === '.XLSX') {
+            FileExcell = files[i];
+
+        }
+    }
+
+    if (FileExcell === undefined) {
         alert("Không tìm thấy file excel trong các file bạn đã chọn");
         return;
+    } else {
+        log(`Đang đọc file excell "${FileExcell.name}" `);
     }
 
+    //
 
-    dataJson = excelFileToJSON(files[0]);
+    let json = {}
+    json = excelFileToJSON(FileExcell);
+    console.log("dsfsd" + json)
 
-    console.log(dataJson);
 
-    // log("UploadCacFile");
-    //log(dataJson);
 
 }
 
 
+function test() {
+    log('test');
+}
+
 
 // http://www.ludovicperrichon.com/update-docx-with-js-and-optianally-upload-it-to-sp/
+
+
+
