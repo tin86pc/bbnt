@@ -1,7 +1,8 @@
-// thêm cdn
+// // thêm cdn
 var cdn = document.createElement('script');
 cdn.setAttribute('src', 'https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js');
 document.head.appendChild(cdn);
+
 cdn.setAttribute('src', 'https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.37.9/docxtemplater.min.js');
 document.head.appendChild(cdn);
 
@@ -58,54 +59,64 @@ function HienThiCacFile() {
 
 
 //----------------------
+function excelFileToJsonPromise(file) {
+    return new Promise((resolve, reject) => {
+        try {
+            let reader = new FileReader();
+            reader.readAsBinaryString(file);
+            reader.onload = function (e) {
+                let workbook = XLSX.read(e.target.result, {
+                    type: 'binary'
+                });
 
-function excelFileToJSON(file) {
-    try {
-        let reader = new FileReader();
-        reader.readAsBinaryString(file);
-        reader.onload = function (e) {
-            let workbook = XLSX.read(e.target.result, {
-                type: 'binary'
-            });
+                const tt = "thong tin";// Tên sheet
+                let roaThongTin = XLSX.utils.sheet_to_json(workbook.Sheets[tt], { header: "A" });
+                if (roaThongTin.length <= 0) {
+                    alert(`không thấy sheet "${tt}" `);
+                    return;
+                }
+                let thongTin = {};
+                thongTin[tt] = roaThongTin;
 
-            const tt = "thong tin";
-            let roaThongTin = XLSX.utils.sheet_to_json(workbook.Sheets[tt], { header: "A" });
-            if (roaThongTin.length <= 0) {
-                alert(`không thấy sheet "${tt}"`);
-                return;
+                //xử lý thông tin mảng nhận được
+                let arrThongTin = {};
+                arrThongTin[tt] = thongTin[tt].map((e) => {
+                    let obj = {};
+                    obj[e.A] = e.B;
+                    return obj;
+                });
+
+
+                const dm = 'danh muc';// Tên sheet
+                let roaDanhMuc = XLSX.utils.sheet_to_json(workbook.Sheets[dm]);
+                if (roaDanhMuc.length <= 0) {
+                    alert(`không thấy sheet "${dm}"`);
+                    return;
+                }
+                let danhMuc = {};
+                danhMuc[dm] = roaDanhMuc;
+
+                let output = {
+                    ...arrThongTin,
+                    ...danhMuc
+                }
+
+                //console.log(output);
+                resolve(output);
+
             }
-            let thongTin = {};
-            thongTin[tt] = roaThongTin;
-
-
-            const dm = 'danh muc';
-            let roaDanhMuc = XLSX.utils.sheet_to_json(workbook.Sheets[dm]);
-            if (roaDanhMuc.length <= 0) {
-                alert(`không thấy sheet "${dm}"`);
-                return;
-            }
-            let danhMuc = {};
-            danhMuc[dm] = roaDanhMuc;
-
-            let output = {
-                ...thongTin,
-                ...danhMuc
-            }
-
-            console.log(output);
-            return output;
-
         }
-    }
-    catch (e) {
-        console.error(e);
-    }
+        catch (e) {
+            console.error(e);
+            reject(e);
+        }
 
 
+    });
 }
 
 
-function UploadCacFile() {
+async function UploadCacFile() {
     var files = document.getElementById('file').files;
     if (files.length == 0) {
         alert("Chưa chọn được file");
@@ -135,11 +146,12 @@ function UploadCacFile() {
         log(`Đang đọc file excell "${FileExcell.name}" `);
     }
 
-    //
+    // lấy dữ liệu từ file excell
+    let json = await excelFileToJsonPromise(FileExcell);
+    console.log(json);
 
-    let json = {}
-    json = excelFileToJSON(FileExcell);
-    console.log("dsfsd" + json)
+
+    // Thay thế dữ liệu nhận được vào các file word
 
 
 
