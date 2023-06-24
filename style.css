@@ -90,3 +90,28 @@
     position: absolute;
     vertical-align: middle;
   }
+
+
+
+a:link {
+  color: hotpink;
+  text-decoration: none;
+}
+
+a:visited {
+  color: green;
+  text-decoration: none;
+}
+
+a:hover {
+  color: red;
+  text-decoration: underline;
+  cursor:pointer
+}
+
+a:active {
+  color: blue;
+  text-decoration: underline;
+  cursor:pointer
+}
+
