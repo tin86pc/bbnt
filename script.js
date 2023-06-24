@@ -1,14 +1,19 @@
 // // thêm cdn
-var cdn = document.createElement('script');
-cdn.setAttribute('src', 'https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js');
-document.head.appendChild(cdn);
+// var cdn = document.createElement('script');
+// cdn.setAttribute('src', 'https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js');
+// document.head.appendChild(cdn);
 
-cdn.setAttribute('src', 'https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.37.9/docxtemplater.min.js');
-document.head.appendChild(cdn);
+//const { docx } = require("./lib/docx_v7");
+
+// cdn.setAttribute('src', 'https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.37.9/docxtemplater.min.js');
+// document.head.appendChild(cdn);
 
 
-
-
+const dm = 'danh muc';// Tên sheet
+const tt = "thong tin";// Tên sheet
+const tenFile = 'Tên file';// Tên file đầu ra
+const tenFileMau = 'Tên file mẫu'// Tên file mẫu
+let Json = {};// obj chứa dữ liệu của file excell
 
 
 // lấy dữ liệu từ google app script
@@ -34,7 +39,7 @@ document.head.appendChild(cdn);
 // Hiển thị log lên textarea
 function log(s) {
     var textarea = document.getElementById('log');
-    textarea.value += s + '\n';
+    textarea.value += s + '\n>';
     textarea.scrollTop = textarea.scrollHeight;
 }
 
@@ -52,6 +57,10 @@ function HienThiCacFile() {
         element += `<li> ${input.files.item(i).name}</li>`
     }
     output.innerHTML = '<ol>' + element + '</ol>';
+
+    XuLyToaBienBan()
+
+
 }
 
 
@@ -69,7 +78,6 @@ function excelFileToJsonPromise(file) {
                     type: 'binary'
                 });
 
-                const tt = "thong tin";// Tên sheet
                 let roaThongTin = XLSX.utils.sheet_to_json(workbook.Sheets[tt], { header: "A" });
                 if (roaThongTin.length <= 0) {
                     alert(`không thấy sheet "${tt}" `);
@@ -86,8 +94,6 @@ function excelFileToJsonPromise(file) {
                     return obj;
                 });
 
-
-                const dm = 'danh muc';// Tên sheet
                 let roaDanhMuc = XLSX.utils.sheet_to_json(workbook.Sheets[dm]);
                 if (roaDanhMuc.length <= 0) {
                     alert(`không thấy sheet "${dm}"`);
@@ -116,8 +122,8 @@ function excelFileToJsonPromise(file) {
 }
 
 
-async function UploadCacFile() {
-    var files = document.getElementById('file').files;
+async function XuLyToaBienBan() {
+    let files = document.getElementById('file').files;
     if (files.length == 0) {
         alert("Chưa chọn được file");
         return;
@@ -147,23 +153,162 @@ async function UploadCacFile() {
     }
 
     // lấy dữ liệu từ file excell
-    let json = await excelFileToJsonPromise(FileExcell);
-    console.log(json);
+    Json = await excelFileToJsonPromise(FileExcell);
+    //console.log(Json);
+
+    // Render các file đã xử lý
+    const output = document.getElementById('ketQua');
+    let html = "";
+
+    for (let i = 0; i < Json[dm].length; i++) {
+        html += `<div>`
+        html += `<li> <a onclick="Xulyfile(${i})"> ${Json[dm][i][tenFile]} </a> </li>`
+        html += `</div>`
+    }
+    output.innerHTML = '<ol>' + html + '</ol>';
+    output.scrollIntoView();
+
+}
+
+function Xulyfile(vitri) {
+    const o = Json[dm][vitri];
+    let tenFM = o[tenFileMau];
+    log(`Đang tìm file ${tenFM}`)
+
+    let files = document.getElementById('file').files;
+    // lấy ra file word trong các file đã chọn
+    let FileWord;
+
+    for (let i = 0; i < files.length; i++) {
+        // Tìm file mẫu
+        if (files[i].name.toUpperCase() === tenFM.toUpperCase()) {
+            FileWord = files[i];
+        }
+    }
+
+    // Thông báo lỗi không tìm thấy file mẫu
+    if (FileWord == undefined) {
+        log(`Không tìm thấy file mẫu ${tenFM}`)
+        return;
+    } else {
+        log(`Tìm thấy file ${tenFM}`);
+    }
+
+    //console.log(FileWord);
+
+    onMyfileChange(FileWord, vitri);
 
 
-    // Thay thế dữ liệu nhận được vào các file word
-
-
+    log("Đã tải file");
 
 }
 
 
-function test() {
-    log('test');
+
+function onMyfileChange(fileInput, vitri) {
+    const oDanhMuc = Json[dm][vitri];
+    const tenF = oDanhMuc[tenFile];
+    const arrThongTin = Json[tt];
+
+    if (fileInput == undefined) {
+        return;
+    }
+
+    var zip = new JSZip()
+    zip.loadAsync(fileInput)
+        .then(function (word) {
+            let xml = word.file("word/document.xml").async("string");
+            return xml
+        })
+        .then(function (xml) {
+
+            for (const [key, value] of Object.entries(oDanhMuc)) {
+                xml = replaceXml(xml, key, value);
+            }
+
+            arrThongTin.forEach(element => {
+                xml = replaceXml(xml, Object.keys(element), Object.values(element));
+            });
+
+            zip.file("word/document.xml", xml);
+
+            zip.generateAsync({ type: "blob" }).then(function (blob) {
+                saveAs(blob, tenF);
+            });
+
+        })
 }
 
 
-// http://www.ludovicperrichon.com/update-docx-with-js-and-optianally-upload-it-to-sp/
+function replaceXml(xml, cu, moi) {
+
+    moi = moi.toString();
+    moi = moi
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll("'", "&apos;")
+        .replaceAll("\"", "&quot;");
+
+    cu = cu.toString();
+    cu = cu
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll("'", "&apos;")
+        .replaceAll("\"", "&quot;");
+
+    let aMoi = moi.split(/[\r\n]+/);
+
+    if (aMoi.length > 1) {
+
+
+        // let s=+aMoi[0]
+
+        // for (let m = 1; m < aMoi.length; m++) {
+        //    s+='</w:p></w:r></w:t>'+aMoi[m]+'</w:t></w:r></w:p>'
+
+        // }
+
+        // xml.replaceAll(cu, moi);
 
 
 
+
+
+
+
+
+
+        //xml.replaceAll(cu, moi);
+
+        // let out = '';
+        // let aXml = xml.split(cu);
+
+        // out += aXml[0].substring(0, aXml[0].indexOf('<w:p '));
+
+
+        // for (let x = 0; x < aXml.length - 1; x++) {
+        //     let dau = aXml[x].substring(aXml[x].indexOf('<w:p '), aXml[x].length);
+
+        //     for (let m = 0; m < aMoi.length; m++) {
+
+        //         out += dau + aMoi[m] + '</w:t></w:r></w:p>'
+        //     }
+
+        // }
+
+        // let cuoi = aXml[aXml.length - 1];
+
+        // out += cuoi.substring(cuoi.indexOf('<w:p '), cuoi.length);
+
+        // console.log(out)
+
+        // return out;
+
+    }
+    else {
+        return xml.replaceAll(cu, moi);
+    }
+
+}
