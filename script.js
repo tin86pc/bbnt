@@ -1,19 +1,10 @@
-// // thêm cdn
-// var cdn = document.createElement('script');
-// cdn.setAttribute('src', 'https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js');
-// document.head.appendChild(cdn);
-
-//const { docx } = require("./lib/docx_v7");
-
-// cdn.setAttribute('src', 'https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.37.9/docxtemplater.min.js');
-// document.head.appendChild(cdn);
-
 
 const dm = 'danh muc';// Tên sheet
 const tt = "thong tin";// Tên sheet
 const tenFile = 'Tên file';// Tên file đầu ra
 const tenFileMau = 'Tên file mẫu'// Tên file mẫu
 let Json = {};// obj chứa dữ liệu của file excell
+
 
 
 // lấy dữ liệu từ google app script
@@ -199,9 +190,16 @@ function Xulyfile(vitri) {
     onMyfileChange(FileWord, vitri);
 
 
+
+
     log("Đã tải file");
 
 }
+
+
+
+
+
 
 
 
@@ -222,16 +220,32 @@ function onMyfileChange(fileInput, vitri) {
         })
         .then(function (xml) {
 
+            // var parser = new DOMParser();
+            // var xmlDoc = parser.parseFromString(xml, "text/xml");
+            // var wp = xmlDoc.getElementsByTagName("w:p")[0];
+            // var wt = wp.getElementsByTagName("w:t")[1].childNodes[0].nodeValue;
+            // ht('wp');
+
+
             for (const [key, value] of Object.entries(oDanhMuc)) {
-                xml = replaceXml(xml, key, value);
+                let cu = key.toString();
+                let moi = value.toString();
+                xml = replaceXml(xml, cu, moi);
             }
 
             arrThongTin.forEach(element => {
-                xml = replaceXml(xml, Object.keys(element), Object.values(element));
+                let cu = Object.keys(element).toString();
+                let moi = Object.values(element).toString();
+                xml = replaceXml(xml, cu, moi);
             });
 
+
+
+            // Thay thế file
             zip.file("word/document.xml", xml);
 
+
+            // Tải xuống file
             zip.generateAsync({ type: "blob" }).then(function (blob) {
                 saveAs(blob, tenF);
             });
@@ -239,10 +253,31 @@ function onMyfileChange(fileInput, vitri) {
         })
 }
 
+function ht(s) {
+    console.log(s);
+    // if (typeof s === 'object') {
+    //     console.log("JSON");
+    //     console.log(JSON.stringify(s, null, 4));
+    // }
+
+}
+
+
+
+
+
+function test() {
+    let cu = `{S1}`;
+    let moi =
+        `123
+        456`;
+    ht(replaceXml(x, cu, moi));
+}
+
 
 function replaceXml(xml, cu, moi) {
 
-    moi = moi.toString();
+
     moi = moi
         .replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
@@ -250,7 +285,6 @@ function replaceXml(xml, cu, moi) {
         .replaceAll("'", "&apos;")
         .replaceAll("\"", "&quot;");
 
-    cu = cu.toString();
     cu = cu
         .replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
@@ -259,20 +293,24 @@ function replaceXml(xml, cu, moi) {
         .replaceAll("\"", "&quot;");
 
     let aMoi = moi.split(/[\r\n]+/);
-
     if (aMoi.length > 1) {
 
+        for (let i = 0; i < aMoi.length; i++) {
+            const element = aMoi[i];
 
-        // let s=+aMoi[0]
-
-        // for (let m = 1; m < aMoi.length; m++) {
-        //    s+='</w:p></w:r></w:t>'+aMoi[m]+'</w:t></w:r></w:p>'
-
-        // }
-
-        // xml.replaceAll(cu, moi);
+            ht(element);
 
 
+            let aXml = xml.split(cu);
+            if (aXml.length > 1) {
+                aXml.forEach(element => {
+                    ht(element);
+                    //ht("--------");
+                });
+            }
+
+
+        }
 
 
 
@@ -280,35 +318,11 @@ function replaceXml(xml, cu, moi) {
 
 
 
-        //xml.replaceAll(cu, moi);
-
-        // let out = '';
-        // let aXml = xml.split(cu);
-
-        // out += aXml[0].substring(0, aXml[0].indexOf('<w:p '));
 
 
-        // for (let x = 0; x < aXml.length - 1; x++) {
-        //     let dau = aXml[x].substring(aXml[x].indexOf('<w:p '), aXml[x].length);
-
-        //     for (let m = 0; m < aMoi.length; m++) {
-
-        //         out += dau + aMoi[m] + '</w:t></w:r></w:p>'
-        //     }
-
-        // }
-
-        // let cuoi = aXml[aXml.length - 1];
-
-        // out += cuoi.substring(cuoi.indexOf('<w:p '), cuoi.length);
-
-        // console.log(out)
-
-        // return out;
-
+        return xml;
     }
-    else {
-        return xml.replaceAll(cu, moi);
-    }
+
+    return xml.replaceAll(cu, moi);
 
 }
