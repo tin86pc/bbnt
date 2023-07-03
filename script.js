@@ -268,15 +268,22 @@ function ht(s) {
 
 function test() {
     let cu = `{S1}`;
-    let moi =
-        `123
-        456`;
-    ht(replaceXml(x, cu, moi));
+    let moi
+        = `d1
+d2
+d3
+d4
+d5`;
+
+    //moi = 'dd';
+
+    let xml = replaceXml(x, cu, moi)
+
+    //ht(xml);
 }
 
 
 function replaceXml(xml, cu, moi) {
-
 
     moi = moi
         .replaceAll("&", "&amp;")
@@ -292,35 +299,54 @@ function replaceXml(xml, cu, moi) {
         .replaceAll("'", "&apos;")
         .replaceAll("\"", "&quot;");
 
-    let aMoi = moi.split(/[\r\n]+/);
-    if (aMoi.length > 1) {
-
-        for (let i = 0; i < aMoi.length; i++) {
-            const element = aMoi[i];
-
-            ht(element);
 
 
-            let aXml = xml.split(cu);
-            if (aXml.length > 1) {
-                aXml.forEach(element => {
-                    ht(element);
-                    //ht("--------");
-                });
+    let aMoi = moi.split(/\r\n|\n|\r/);
+    let aXml = xml.split(cu);
+
+
+    if (aMoi.length > 1 && aXml.length > 1) {
+
+        for (let c = 0; c < aXml.length - 1; c++) {
+
+            let s = '';
+
+            for (let m = 0; m < aMoi.length; m++) {
+
+                const sd = aXml[c];
+                const dau = sd.substring(sd.lastIndexOf("w:p ") - 1, sd.length);
+
+                const sc = aXml[c + 1];
+                const cuoi = sc.substring(0, sc.indexOf("w:p") + 4);
+
+                s += dau + aMoi[m] + cuoi;
+
+            }
+
+            if (s !== '') {
+
+                // Cắt bỏ phần đầu thừa
+                s = s.substring(s.indexOf("w:t"), s.length);
+                s = s.substring(s.indexOf(">") + 1, s.length);
+
+
+                // Cắt bỏ phần cuối thừa
+                s = s.substring(0, s.lastIndexOf("w:t") - 2);
+
+                aXml[c] = aXml[c] + s;
             }
 
 
         }
 
+        let nd = ""
+        aXml.forEach(element => {
+            nd += element.trim();
+        });
 
+        //ht(nd);
 
-
-
-
-
-
-
-        return xml;
+        return nd;
     }
 
     return xml.replaceAll(cu, moi);
