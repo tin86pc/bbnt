@@ -255,11 +255,6 @@ function onMyfileChange(fileInput, vitri) {
 
 function ht(s) {
     console.log(s);
-    // if (typeof s === 'object') {
-    //     console.log("JSON");
-    //     console.log(JSON.stringify(s, null, 4));
-    // }
-
 }
 
 
