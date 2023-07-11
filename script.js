@@ -4,6 +4,8 @@ const tt = "thong tin";// Tên sheet
 const tenFile = 'Tên file';// Tên file đầu ra
 const tenFileMau = 'Tên file mẫu'// Tên file mẫu
 let Json = {};// obj chứa dữ liệu của file excell
+const khoaMo = "%>";
+const khoaDong = "<%";
 
 
 
@@ -198,11 +200,6 @@ function Xulyfile(vitri) {
 
 
 
-
-
-
-
-
 function onMyfileChange(fileInput, vitri) {
     const oDanhMuc = Json[dm][vitri];
     const tenF = oDanhMuc[tenFile];
@@ -220,12 +217,7 @@ function onMyfileChange(fileInput, vitri) {
         })
         .then(function (xml) {
 
-            // var parser = new DOMParser();
-            // var xmlDoc = parser.parseFromString(xml, "text/xml");
-            // var wp = xmlDoc.getElementsByTagName("w:p")[0];
-            // var wt = wp.getElementsByTagName("w:t")[1].childNodes[0].nodeValue;
-            // ht('wp');
-
+            xml = xuLyBiTachXML(xml);
 
             for (const [key, value] of Object.entries(oDanhMuc)) {
                 let cu = key.toString();
@@ -262,19 +254,35 @@ function ht(s) {
 
 
 function test() {
-    let cu = `{S1}`;
-    let moi
-        = `d1
-d2
-d3
-d4
-d5`;
+    //xuLyTrungLap(x);
 
-    //moi = 'dd';
+}
 
-    let xml = replaceXml(x, cu, moi)
+function xuLyBiTachXML(s) {
+    const awp = s.split('<%');
 
-    //ht(xml);
+    for (let i = 1; i < awp.length; i++) {
+        const element = awp[i];
+        const vtd = element.indexOf("</w:t>");
+        if (vtd != -1) {
+
+            const vtc = element.indexOf("<w:t", vtd);
+            const vtcc = element.indexOf(">", vtc);
+
+            let ss = "<%" + element.substring(0, vtd) + element.substring(vtcc + 1);
+            awp[i] = ss;
+        }
+
+    }
+
+
+    let t = ""
+    for (let i = 0; i < awp.length; i++) {
+        t += awp[i] + "<%";
+    }
+
+    t = t.substring(0, t.length - 2);
+    return t;
 }
 
 
