@@ -1,40 +1,40 @@
-let aMoi = moi.split(/[\r\n]+/);
-aMoi.forEach(element => {
-    ht(element);
-    ht("----");
-});
+const awp = s.split('<%');
 
+for (let i = 1; i < awp.length; i++) {
+    const ewp = awp[i];
+    if (ewp.indexOf("</w:t>") != -1) {
 
+        const awt = ewp.split('</w:t>');
 
+        for (let j = 1; j < awt.length - 1; j++) {
+            const ewt = awt[j];
 
-if (aMoi.length > 1) {
+            const vtc = ewt.indexOf("<w:t", 0);
+            const vtcc = ewt.indexOf(">", vtc);
 
-    //----------------
+            let swt = ewt.substring(vtcc + 1);
+            //ht(swt);
 
-    //----------------
+            awt[j] = swt;
+        }
+        awt[awt.length - 2] += "</w:t>"
 
-    let out = '';
-    let aXml = xml.split(cu);
+        let k = '';
 
-    if (aXml.length > 1) {
-        out += aXml[0].substring(0, aXml[0].indexOf('<w:p '));
-
-
-        for (let x = 0; x < aXml.length - 1; x++) {
-            let dau = aXml[x].substring(aXml[x].indexOf('<w:p '), aXml[x].length);
-
-            for (let m = 0; m < aMoi.length; m++) {
-
-                out += dau + aMoi[m] + '</w:t></w:r></w:p>'
-            }
-
+        for (let n = 0; n < awt.length; n++) {
+            k += awt[n];
         }
 
-        let cuoi = aXml[aXml.length - 1];
-
-        out += cuoi.substring(cuoi.indexOf('<w:p '), cuoi.length);
-
-        return out;
+        awp[i] = k;
     }
 
 }
+
+let t = ""
+for (let i = 0; i < awp.length; i++) {
+    t += awp[i] + "<%";
+}
+
+t = t.substring(0, t.length - 2);
+ht("đầu ra " + t);
+return t;

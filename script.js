@@ -249,40 +249,95 @@ function ht(s) {
     console.log(s);
 }
 
-
-
-
-
 function test() {
-    //xuLyTrungLap(x);
 
+    xuLyBiTachXML(x)
+}
+
+
+let x = `
+<w:r>
+<w:rPr>
+<w:b/>
+<w:i/>
+<w:color w:val="C00000"/>
+<w:sz w:val="28"/>
+<w:szCs w:val="28"/>
+</w:rPr>
+<w:t>11<%ban ql</w:t>
+</w:r>
+<w:r w:rsidRPr="004E5020">
+<w:rPr>
+<w:b/>
+<w:i/>
+<w:color w:val="C00000"/>
+<w:sz w:val="28"/>
+<w:szCs w:val="28"/>
+</w:rPr>
+<w:t>d</w:t>
+</w:r>
+<w:r>
+<w:rPr>
+<w:b/>
+<w:i/>
+<w:color w:val="C00000"/>
+<w:sz w:val="28"/>
+<w:szCs w:val="28"/>
+</w:rPr>
+<w:t>a%>22</w:t>
+</w:r>
+
+<w:r>
+<w:rPr>
+<w:b/>
+<w:i/>
+<w:color w:val="C00000"/>
+<w:sz w:val="28"/>
+<w:szCs w:val="28"/>
+</w:rPr>
+<w:t>11<%ban ql</w:t>
+</w:r>
+<w:r w:rsidRPr="004E5020">
+<w:rPr>
+<w:b/>
+<w:i/>
+<w:color w:val="C00000"/>
+<w:sz w:val="28"/>
+<w:szCs w:val="28"/>
+</w:rPr>
+<w:t>d</w:t>
+</w:r>
+<w:r>
+<w:rPr>
+<w:b/>
+<w:i/>
+<w:color w:val="C00000"/>
+<w:sz w:val="28"/>
+<w:szCs w:val="28"/>
+</w:rPr>
+<w:t>a%>22</w:t>
+</w:r>
+
+`
+Object.prototype.log = function (x) {
+    if (x == undefined) {
+        console.log(this.toString());
+    } else {
+        console.log(x + " " + this.toString());
+    }
 }
 
 function xuLyBiTachXML(s) {
-    const awp = s.split('<%');
+    return s;
+}
 
-    for (let i = 1; i < awp.length; i++) {
-        const element = awp[i];
-        const vtd = element.indexOf("</w:t>");
-        if (vtd != -1) {
-
-            const vtc = element.indexOf("<w:t", vtd);
-            const vtcc = element.indexOf(">", vtc);
-
-            let ss = "<%" + element.substring(0, vtd) + element.substring(vtcc + 1);
-            awp[i] = ss;
-        }
-
+function gopArray(a, s) {
+    let ss = a[0];
+    for (let i = 1; i < a.length; i++) {
+        const element = a[i];
+        ss += s + element;
     }
-
-
-    let t = ""
-    for (let i = 0; i < awp.length; i++) {
-        t += awp[i] + "<%";
-    }
-
-    t = t.substring(0, t.length - 2);
-    return t;
+    return ss;
 }
 
 
@@ -354,4 +409,14 @@ function replaceXml(xml, cu, moi) {
 
     return xml.replaceAll(cu, moi);
 
+}
+
+
+function docFile(fn) {
+    fetch(fn)
+        .then((res) => res.text())
+        .then((text) => {
+            return text;
+        })
+        .catch((e) => console.error(e));
 }
