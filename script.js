@@ -57,9 +57,6 @@ function HienThiCacFile() {
 }
 
 
-
-
-
 //----------------------
 function excelFileToJsonPromise(file) {
     return new Promise((resolve, reject) => {
@@ -199,7 +196,6 @@ function Xulyfile(vitri) {
 }
 
 
-
 function onMyfileChange(fileInput, vitri) {
     const oDanhMuc = Json[dm][vitri];
     const tenF = oDanhMuc[tenFile];
@@ -216,6 +212,7 @@ function onMyfileChange(fileInput, vitri) {
             return xml
         })
         .then(function (xml) {
+
 
             xml = xuLyBiTachXML(xml);
 
@@ -245,80 +242,67 @@ function onMyfileChange(fileInput, vitri) {
         })
 }
 
-function ht(s) {
-    console.log(s);
-}
+
+
 
 function test() {
+    fetch("document.xml")
+        .then((res) => res.text())
+        .then((text) => {
 
-    xuLyBiTachXML(x)
+            xuLyBiTachXML(text);
+
+        })
+        .catch((e) => console.error(e));
+
+
+}
+
+function xuLyBiTachXML(xml) {
+    //Chuyển string thành XMLDocument
+    const xmlDoc = new DOMParser().parseFromString(xml, "text/xml");
+
+    // Xử lý xml
+
+    let awt = xmlDoc.getElementsByTagName('w:t');
+    for (let i = 0; i < awt.length; i++) {
+
+        for (let j = 0; j < awt[i].childNodes.length; j++) {
+
+            if (awt[i].childNodes[j].nodeValue.includes("<%") && !awt[i].childNodes[j].nodeValue.includes("%>")) {
+
+                let k = 0;
+                let ss = "";
+
+                do {
+                    ss += awt[i + k].childNodes[j].nodeValue;
+                    awt[i + k].childNodes[j].nodeValue = "";
+
+                    k++;
+                } while (
+                    !awt[i + k].childNodes[j].nodeValue.includes("%>") ||
+                    (awt[i + k].childNodes[j].nodeValue.includes("<%") && awt[i + k].childNodes[j].nodeValue.includes("%>"))
+
+                )// thoát khi false
+
+                ss += awt[i + k].childNodes[j].nodeValue;
+                awt[i + k].childNodes[j].nodeValue = "";
+
+                awt[i].childNodes[j].nodeValue = ss;
+            }
+
+        }
+    }
+
+    // chuyển XMLDocument thành string
+    const sXml = new XMLSerializer().serializeToString(xmlDoc);
+    //sXml.log();
+
+    return sXml;
 }
 
 
-let x = `
-<w:r>
-<w:rPr>
-<w:b/>
-<w:i/>
-<w:color w:val="C00000"/>
-<w:sz w:val="28"/>
-<w:szCs w:val="28"/>
-</w:rPr>
-<w:t>11<%ban ql</w:t>
-</w:r>
-<w:r w:rsidRPr="004E5020">
-<w:rPr>
-<w:b/>
-<w:i/>
-<w:color w:val="C00000"/>
-<w:sz w:val="28"/>
-<w:szCs w:val="28"/>
-</w:rPr>
-<w:t>d</w:t>
-</w:r>
-<w:r>
-<w:rPr>
-<w:b/>
-<w:i/>
-<w:color w:val="C00000"/>
-<w:sz w:val="28"/>
-<w:szCs w:val="28"/>
-</w:rPr>
-<w:t>a%>22</w:t>
-</w:r>
 
-<w:r>
-<w:rPr>
-<w:b/>
-<w:i/>
-<w:color w:val="C00000"/>
-<w:sz w:val="28"/>
-<w:szCs w:val="28"/>
-</w:rPr>
-<w:t>11<%ban ql</w:t>
-</w:r>
-<w:r w:rsidRPr="004E5020">
-<w:rPr>
-<w:b/>
-<w:i/>
-<w:color w:val="C00000"/>
-<w:sz w:val="28"/>
-<w:szCs w:val="28"/>
-</w:rPr>
-<w:t>d</w:t>
-</w:r>
-<w:r>
-<w:rPr>
-<w:b/>
-<w:i/>
-<w:color w:val="C00000"/>
-<w:sz w:val="28"/>
-<w:szCs w:val="28"/>
-</w:rPr>
-<w:t>a%>22</w:t>
-</w:r>
-
-`
 Object.prototype.log = function (x) {
     if (x == undefined) {
         console.log(this.toString());
@@ -327,18 +311,6 @@ Object.prototype.log = function (x) {
     }
 }
 
-function xuLyBiTachXML(s) {
-    return s;
-}
-
-function gopArray(a, s) {
-    let ss = a[0];
-    for (let i = 1; i < a.length; i++) {
-        const element = a[i];
-        ss += s + element;
-    }
-    return ss;
-}
 
 
 function replaceXml(xml, cu, moi) {
@@ -412,11 +384,5 @@ function replaceXml(xml, cu, moi) {
 }
 
 
-function docFile(fn) {
-    fetch(fn)
-        .then((res) => res.text())
-        .then((text) => {
-            return text;
-        })
-        .catch((e) => console.error(e));
-}
+
+
