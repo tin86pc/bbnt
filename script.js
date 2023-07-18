@@ -242,9 +242,6 @@ function onMyfileChange(fileInput, vitri) {
         })
 }
 
-
-
-
 function test() {
     fetch("document.xml")
         .then((res) => res.text())
@@ -301,8 +298,6 @@ function xuLyBiTachXML(xml) {
     return sXml;
 }
 
-
-
 Object.prototype.log = function (x) {
     if (x == undefined) {
         console.log(this.toString());
@@ -310,8 +305,6 @@ Object.prototype.log = function (x) {
         console.log(x + " " + this.toString());
     }
 }
-
-
 
 function replaceXml(xml, cu, moi) {
 
