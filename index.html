@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <!-- Đọc file excell -->
     <script type="text/javascript" src="lib/xlsx.js"></script>
 
@@ -19,68 +20,78 @@
     <script src="script.js"></script>
     <link rel="stylesheet" href="style.css">
     <title>BBNT V1</title>
+
 </head>
 
 <body>
-    <p>Phiên bản online V1.2</p>
-    <p>
-        <a target="_blank" href="//drive.google.com/drive/folders/1JONgUOcWYCA8wGDXsgtadAzVn7W85po9?usp=sharing">
-            Tải form mẫu 1 (nếu cần)
-        </a>
-    </p>
 
     <div>
-
-        <label>Chọn các file upload</label>
-
-
-        <!-- directory="" webkitdirectory="" moxdirectory=""  -->
-        <input type="file" id="file" accept=".xls,.xlsx,.docx" multiple onchange="HienThiCacFile();" />
-
-        <br />
-        <p id="trangThai">Chưa chọn file</p>
-        <div id="fileList"></div>
-        <br />
+        <p>BBNT-v2</p>
+        <p>
+            <a target="_blank" href="//drive.google.com/drive/folders/1JONgUOcWYCA8wGDXsgtadAzVn7W85po9?usp=sharing">
+                Link tải form mẫu 1
+            </a>
+        </p>
     </div>
-
-    <button onclick="XuLyToaBienBan()">Xử lý biên bản</button>
 
     <br>
-    <div id="progressbar">
-        <div class="progress-label"></div>
-    </div>
+    <fieldset>
+        <legend>Đầu vào</legend>
+        <div>
 
-    <br />
-    <div id="ketQua">
+            <input type="file" id="file" accept=".xlsx,.docx" multiple onchange="HienThiCacFile();" />
+            <p id="trangThai">Chưa chọn file</p>
+            <div id="fileList"></div>
 
-    </div>
+        </div>
+    </fieldset>
 
-    <br />
-    <textarea id="log" rows="10" cols="50"></textarea>
+    <br>
+    <fieldset>
+        <legend>Xử lý</legend>
+        <div>
+            <button onclick="XuLyToaBienBan()">Xử lý biên bản</button>
+            <br>
+            <br>
+            <div id="myProgress">
+                <div id="myBar"></div>
+            </div>
+        </div>
+    </fieldset>
 
-    <!-- code test -->
+    <br>
+    <fieldset>
+        <legend>Đầu ra</legend>
+        <div>
 
-    <div>
-        <label>Địa chỉ Email</label>
-        <input id="myEmail" type="text" name="propertyAddress" placeholder="...">
-    </div>
-
-
-
-    <br />
-    <textarea id="log" rows="10" cols="50"></textarea>
-
-    <br />
-    <button onclick="test()">Gửi lỗi</button>
-
-    <!-- ------------------------------ -->
+            <div id="ketQua"></div>
+            <br>
+            <button onclick="TaiTatCaFile()">Tải toàn bộ file</button>
+        </div>
+    </fieldset>
 
 
+    <br>
+    <textarea id="log" rows="10" cols="51"></textarea>
 
+    <br>
+    <fieldset>
+        <legend>Phản hồi</legend>
+        <div>
 
+            <br>
+            <label>Địa chỉ Email</label>
+            <input id="myEmail" type="text" name="propertyAddress" placeholder="...">
 
+            <br>
+            <label>Nội dung</label>
+            <textarea id="phan_anh" rows="10" cols="47"></textarea>
 
+            <br>
+            <button onclick="test()">Gửi lỗi</button>
 
+        </div>
+    </fieldset>
 
 
 

@@ -1,3 +1,4 @@
+// BBNT v2
 
 const dm = 'danh muc';// Tên sheet
 const tt = "thong tin";// Tên sheet
@@ -6,8 +7,6 @@ const tenFileMau = 'Tên file mẫu'// Tên file mẫu
 let Json = {};// obj chứa dữ liệu của file excell
 const khoaMo = "%>";
 const khoaDong = "<%";
-
-
 
 // lấy dữ liệu từ google app script
 (function () {
@@ -28,6 +27,15 @@ const khoaDong = "<%";
             document.getElementById("myEmail").value = d[0].email;
         });
 })();
+
+// Hàm console.log kiểu mới
+Object.prototype.log = function (x) {
+    if (x == undefined) {
+        console.log(this.toString());
+    } else {
+        console.log(x + " " + this.toString());
+    }
+}
 
 // Hiển thị log lên textarea
 function log(s) {
@@ -51,11 +59,61 @@ function HienThiCacFile() {
     }
     output.innerHTML = '<ol>' + element + '</ol>';
 
-    XuLyToaBienBan()
-
-
 }
 
+//
+async function XuLyToaBienBan() {
+    let files = document.getElementById('file').files;
+    if (files.length == 0) {
+        alert("Chưa chọn được file");
+        log("Chưa chọn được file")
+        return;
+    } else {
+        log(`Đang xử lý ${files.length} file`)
+    }
+
+    // lấy ra file excell trong các file đã chọn
+    let FileExcell;
+
+    for (i = 0; i < files.length; i++) {
+        const filename = files[i].name;
+        const extension = filename.substring(filename.lastIndexOf(".")).toUpperCase();
+
+        // Kiểm tra có phải là file excell không
+        if (extension === '.XLS' || extension === '.XLSX') {
+            FileExcell = files[i];
+
+        }
+    }
+
+    if (FileExcell === undefined) {
+        alert("Không tìm thấy file excel trong các file bạn đã chọn");
+        log("Không tìm thấy file excel trong các file bạn đã chọn");
+        return;
+    } else {
+        log(`Đang đọc file excell "${FileExcell.name}" `);
+    }
+
+    // lấy dữ liệu từ file excell
+    Json = await excelFileToJsonPromise(FileExcell);
+
+
+
+    // Render các file đã xử lý
+    const output = document.getElementById('ketQua');
+    let html = "";
+
+    for (let i = 0; i < Json[dm].length; i++) {
+        html += `<div>`
+        html += `<li> <a onclick="Xulyfile(${i})"> ${Json[dm][i][tenFile]} </a> </li>`
+        html += `</div>`
+    }
+    output.innerHTML = '<ol>' + html + '</ol>';
+    //output.scrollIntoView();
+
+    move();
+
+}
 
 //----------------------
 function excelFileToJsonPromise(file) {
@@ -97,9 +155,7 @@ function excelFileToJsonPromise(file) {
                     ...danhMuc
                 }
 
-                //console.log(output);
                 resolve(output);
-
             }
         }
         catch (e) {
@@ -107,66 +163,18 @@ function excelFileToJsonPromise(file) {
             reject(e);
         }
 
-
     });
 }
 
-
-async function XuLyToaBienBan() {
-    let files = document.getElementById('file').files;
-    if (files.length == 0) {
-        alert("Chưa chọn được file");
-        return;
-    } else {
-        log(`Đang xử lý ${files.length} file`)
-    }
-
-    // lấy ra file excell trong các file đã chọn
-    let FileExcell;
-
-    for (i = 0; i < files.length; i++) {
-        const filename = files[i].name;
-        const extension = filename.substring(filename.lastIndexOf(".")).toUpperCase();
-
-        // Kiểm tra có phải là file excell không
-        if (extension === '.XLS' || extension === '.XLSX') {
-            FileExcell = files[i];
-
-        }
-    }
-
-    if (FileExcell === undefined) {
-        alert("Không tìm thấy file excel trong các file bạn đã chọn");
-        return;
-    } else {
-        log(`Đang đọc file excell "${FileExcell.name}" `);
-    }
-
-    // lấy dữ liệu từ file excell
-    Json = await excelFileToJsonPromise(FileExcell);
-    //console.log(Json);
-
-    // Render các file đã xử lý
-    const output = document.getElementById('ketQua');
-    let html = "";
-
-    for (let i = 0; i < Json[dm].length; i++) {
-        html += `<div>`
-        html += `<li> <a onclick="Xulyfile(${i})"> ${Json[dm][i][tenFile]} </a> </li>`
-        html += `</div>`
-    }
-    output.innerHTML = '<ol>' + html + '</ol>';
-    output.scrollIntoView();
-
-}
-
+// Nhận sự kiện bấm link để tạo file
 function Xulyfile(vitri) {
     const o = Json[dm][vitri];
     let tenFM = o[tenFileMau];
     log(`Đang tìm file ${tenFM}`)
 
     let files = document.getElementById('file').files;
-    // lấy ra file word trong các file đã chọn
+
+    // lấy ra file word mẫu trong các file đã chọn
     let FileWord;
 
     for (let i = 0; i < files.length; i++) {
@@ -178,25 +186,21 @@ function Xulyfile(vitri) {
 
     // Thông báo lỗi không tìm thấy file mẫu
     if (FileWord == undefined) {
+        alert(`Không tìm thấy file mẫu ${tenFM}`);
         log(`Không tìm thấy file mẫu ${tenFM}`)
         return;
     } else {
         log(`Tìm thấy file ${tenFM}`);
     }
 
-    //console.log(FileWord);
-
-    onMyfileChange(FileWord, vitri);
-
-
-
+    TaiTungFile(FileWord, vitri);
 
     log("Đã tải file");
 
 }
 
 
-function onMyfileChange(fileInput, vitri) {
+function TaiTungFile(fileInput, vitri) {
     const oDanhMuc = Json[dm][vitri];
     const tenF = oDanhMuc[tenFile];
     const arrThongTin = Json[tt];
@@ -242,18 +246,6 @@ function onMyfileChange(fileInput, vitri) {
         })
 }
 
-function test() {
-    fetch("document.xml")
-        .then((res) => res.text())
-        .then((text) => {
-
-            xuLyBiTachXML(text);
-
-        })
-        .catch((e) => console.error(e));
-
-
-}
 
 function xuLyBiTachXML(xml) {
     //Chuyển string thành XMLDocument
@@ -298,13 +290,6 @@ function xuLyBiTachXML(xml) {
     return sXml;
 }
 
-Object.prototype.log = function (x) {
-    if (x == undefined) {
-        console.log(this.toString());
-    } else {
-        console.log(x + " " + this.toString());
-    }
-}
 
 function replaceXml(xml, cu, moi) {
 
@@ -376,6 +361,50 @@ function replaceXml(xml, cu, moi) {
 
 }
 
+function TaiTatCaFile() {
+    "Tải toàn bộ file ".log();
 
+}
+
+function test() {
+    // fetch("document.xml")
+    //     .then((res) => res.text())
+    //     .then((text) => {
+
+    //         xuLyBiTachXML(text);
+
+    //     })
+    //     .catch((e) => console.error(e));
+    "test".log();
+    move();
+
+
+
+
+
+
+
+
+}
+
+
+var i = 0;
+function move() {
+    if (i == 0) {
+        i = 1;
+        var elem = document.getElementById("myBar");
+        var width = 1;
+        var id = setInterval(frame, 50);
+        function frame() {
+            if (width >= 100) {
+                clearInterval(id);
+                i = 0;
+            } else {
+                width++;
+                elem.style.width = width + "%";
+            }
+        }
+    }
+}
 
 
