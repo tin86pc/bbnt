@@ -59,10 +59,20 @@ function HienThiCacFile() {
     }
     output.innerHTML = '<ol>' + element + '</ol>';
 
+    document.getElementById("xuly").style.display = "block";
+
+
+}
+
+
+
+function XuLyToaBienBan() {
+    move(TaoDanhSachBienBan);
 }
 
 //
-async function XuLyToaBienBan() {
+async function TaoDanhSachBienBan() {
+
     let files = document.getElementById('file').files;
     if (files.length == 0) {
         alert("Chưa chọn được file");
@@ -97,8 +107,6 @@ async function XuLyToaBienBan() {
     // lấy dữ liệu từ file excell
     Json = await excelFileToJsonPromise(FileExcell);
 
-
-
     // Render các file đã xử lý
     const output = document.getElementById('ketQua');
     let html = "";
@@ -111,9 +119,10 @@ async function XuLyToaBienBan() {
     output.innerHTML = '<ol>' + html + '</ol>';
     //output.scrollIntoView();
 
-    move();
+    document.getElementById("daura").style.display = "block";
 
 }
+
 
 //----------------------
 function excelFileToJsonPromise(file) {
@@ -366,7 +375,7 @@ function TaiTatCaFile() {
 
 }
 
-function test() {
+function GuiLoi() {
     // fetch("document.xml")
     //     .then((res) => res.text())
     //     .then((text) => {
@@ -375,8 +384,10 @@ function test() {
 
     //     })
     //     .catch((e) => console.error(e));
-    "test".log();
-    move();
+    //"test".log();
+    //move();
+    //log("hien thi");
+
 
 
 
@@ -388,8 +399,11 @@ function test() {
 }
 
 
+
+
+
 var i = 0;
-function move() {
+function move(cb) {
     if (i == 0) {
         i = 1;
         var elem = document.getElementById("myBar");
@@ -398,13 +412,13 @@ function move() {
         function frame() {
             if (width >= 100) {
                 clearInterval(id);
+                cb();
                 i = 0;
             } else {
                 width++;
                 elem.style.width = width + "%";
+                elem.innerHTML = width + "%";
             }
         }
     }
 }
-
-
