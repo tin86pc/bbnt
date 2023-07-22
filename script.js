@@ -64,10 +64,25 @@ function HienThiCacFile() {
 
 }
 
-
-
+let i = 0;
 function XuLyToaBienBan() {
-    move(TaoDanhSachBienBan);
+    if (i == 0) {
+        i = 1;
+        var elem = document.getElementById("myBar");
+        var width = 1;
+        var id = setInterval(frame, 50);
+        function frame() {
+            if (width >= 100) {
+                clearInterval(id);
+                TaoDanhSachBienBan();
+                i = 0;
+            } else {
+                width++;
+                elem.style.width = width + "%";
+                elem.innerHTML = width + "%";
+            }
+        }
+    }
 }
 
 //
@@ -123,7 +138,6 @@ async function TaoDanhSachBienBan() {
 
 }
 
-
 //----------------------
 function excelFileToJsonPromise(file) {
     return new Promise((resolve, reject) => {
@@ -177,8 +191,8 @@ function excelFileToJsonPromise(file) {
 
 // Nhận sự kiện bấm link để tạo file
 function Xulyfile(vitri) {
-    const o = Json[dm][vitri];
-    let tenFM = o[tenFileMau];
+    const oDanhMuc = Json[dm][vitri];
+    let tenFM = oDanhMuc[tenFileMau];
     log(`Đang tìm file ${tenFM}`)
 
     let files = document.getElementById('file').files;
@@ -202,24 +216,12 @@ function Xulyfile(vitri) {
         log(`Tìm thấy file ${tenFM}`);
     }
 
-    TaiTungFile(FileWord, vitri);
-
-    log("Đã tải file");
-
-}
-
-
-function TaiTungFile(fileInput, vitri) {
-    const oDanhMuc = Json[dm][vitri];
+    // Tạo file đầu ra
     const tenF = oDanhMuc[tenFile];
     const arrThongTin = Json[tt];
 
-    if (fileInput == undefined) {
-        return;
-    }
-
     var zip = new JSZip()
-    zip.loadAsync(fileInput)
+    zip.loadAsync(FileWord)
         .then(function (word) {
             let xml = word.file("word/document.xml").async("string");
             return xml
@@ -248,11 +250,26 @@ function TaiTungFile(fileInput, vitri) {
 
 
             // Tải xuống file
-            zip.generateAsync({ type: "blob" }).then(function (blob) {
-                saveAs(blob, tenF);
-            });
-
+            zip.generateAsync({ type: "blob" })
+                .then(function (blob) {
+                    saveAs(blob, tenF);
+                });
         })
+
+
+    log("Đã tải file");
+
+}
+
+function TaiTatCaFile() {
+    "Tải toàn bộ file ".log();
+    log("Tải toàn bộ các file");
+
+
+    const arrThongTin = Json[tt];
+    const arrDanhMuc = Json[dm];
+
+
 }
 
 
@@ -370,12 +387,8 @@ function replaceXml(xml, cu, moi) {
 
 }
 
-function TaiTatCaFile() {
-    "Tải toàn bộ file ".log();
-
-}
-
 function GuiLoi() {
+    log("gửi lỗi");
     // fetch("document.xml")
     //     .then((res) => res.text())
     //     .then((text) => {
@@ -399,26 +412,3 @@ function GuiLoi() {
 }
 
 
-
-
-
-var i = 0;
-function move(cb) {
-    if (i == 0) {
-        i = 1;
-        var elem = document.getElementById("myBar");
-        var width = 1;
-        var id = setInterval(frame, 50);
-        function frame() {
-            if (width >= 100) {
-                clearInterval(id);
-                cb();
-                i = 0;
-            } else {
-                width++;
-                elem.style.width = width + "%";
-                elem.innerHTML = width + "%";
-            }
-        }
-    }
-}
