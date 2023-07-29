@@ -8,25 +8,41 @@ let Json = {};// obj chứa dữ liệu của file excell
 const khoaMo = "%>";
 const khoaDong = "<%";
 
-// lấy dữ liệu từ google app script
-(function () {
-    const urlApi = "https://script.google.com/macros/s/AKfycbyZPSsnfkay94_iSMJ0oMdtA3dm4JTici5_avaVf51oC_CvYgISdsE8PvvOb2dpMflp/exec";
-    fetch(urlApi)
-        .then(d => d.json())
-        .then(d => {
-            document.getElementById("log").value = 'Hà Nội, ngày ' + d[0].ngay + " " + d[0].gio + '\n';
-        });
-})();
+const urlLayEmailThoiGian = "https://script.google.com/macros/s/AKfycbzz48XInpKgHZBJ7olgMdcmB9mpntDv6D83myaG70GVXEUk2BBoO_QmkMpP1pjhXC59Jg/exec";
+const urlSheet = 'https://script.google.com/macros/s/AKfycbymtEG2MKUknHEsBGxnKdCh7_eVwCq4Yei0vi4Dko2e7pxqR-a8qGfTGpWPRpmNoJBz/exec';
 
-// Lấy địa chỉ gmail người dùng
-(function () {
-    const urlApi = 'https://script.google.com/macros/s/AKfycbyLGsRs7t0SJKY74mVcTJZVOMsK6h33mmma-j1BxibVM6ks2wNMlYizjesYGr8fpUgD/exec';
-    fetch(urlApi)
+// lấy dữ liệu từ google app script
+(function LayEmailThoiGian() {
+    fetch(urlLayEmailThoiGian)
         .then(d => d.json())
         .then(d => {
-            document.getElementById("myEmail").value = d[0].email;
+            const Ngay = d[0].ngay;
+            const Gio = d[0].gio;
+            const Email = d[0].email;
+            document.getElementById("log").value = 'Hà Nội, ngày ' + Ngay + " " + Gio + '\n';
+            document.getElementById("email").value = Email;
+
+            fetch(urlSheet, { method: "POST", body: d[0] })
+
+        })
+}
+
+)();
+
+// Gửi dữ liệu lên google sheet
+function GuiPhanHoi() {
+
+    let form = document.querySelector("form");
+    let thongbao = document.getElementById("thongbao")
+    thongbao.innerHTML = "Đang gửi phản hồi";
+    let data = new FormData(form);
+
+    fetch(urlSheet, { method: "POST", body: data })
+        .then(res => res.text())
+        .then(text => {
+            document.getElementById("thongbao").innerHTML = text;
         });
-})();
+}
 
 // Hàm console.log kiểu mới
 Object.prototype.log = function (x) {
@@ -85,7 +101,6 @@ function XuLyToaBienBan() {
     }
 }
 
-//
 async function TaoDanhSachBienBan() {
 
     let files = document.getElementById('file').files;
@@ -189,7 +204,6 @@ function excelFileToJsonPromise(file) {
     });
 }
 
-// Nhận sự kiện bấm link để tạo file
 function Xulyfile(vitri) {
     const oDanhMuc = Json[dm][vitri];
     let tenFM = oDanhMuc[tenFileMau];
@@ -271,7 +285,6 @@ function TaiTatCaFile() {
 
 
 }
-
 
 function xuLyBiTachXML(xml) {
     //Chuyển string thành XMLDocument
@@ -386,29 +399,3 @@ function replaceXml(xml, cu, moi) {
     return xml.replaceAll(cu, moi);
 
 }
-
-function GuiLoi() {
-    log("gửi lỗi");
-    // fetch("document.xml")
-    //     .then((res) => res.text())
-    //     .then((text) => {
-
-    //         xuLyBiTachXML(text);
-
-    //     })
-    //     .catch((e) => console.error(e));
-    //"test".log();
-    //move();
-    //log("hien thi");
-
-
-
-
-
-
-
-
-
-}
-
-
