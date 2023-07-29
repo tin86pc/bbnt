@@ -63,6 +63,9 @@
 
 
     <br>
+
+    <!-- <fieldset id="daura" style="display: none;"> -->
+
     <fieldset id="daura" style="display: none;">
         <legend>Đầu ra</legend>
         <div>
@@ -81,19 +84,32 @@
         <legend>Phản hồi</legend>
         <div>
 
-            <br>
-            <label>Địa chỉ Email</label>
-            <input id="myEmail" type="text" name="propertyAddress" placeholder="...">
+            <form id="formPhanHoi">
+                <br>
+                <label>Địa chỉ Email</label>
+                <input id="email" type="text" name="email" placeholder="...">
 
-            <br>
-            <label>Nội dung</label>
-            <textarea id="phan_anh" rows="10" cols="47"></textarea>
+                <br>
+                <label>Nội dung</label>
+                <br>
 
-            <br>
-            <button onclick="GuiLoi()">Gửi lỗi</button>
+                <textarea id="noidung" name="noidung" rows="10" cols="47"></textarea>
+
+                <br>
+                <button type="button" onclick="GuiPhanHoi()">Gửi lỗi</button>
+                <label id="thongbao">...</label>
+
+            </form>
+
 
         </div>
     </fieldset>
+
+
+
+
+
+
 
 
 
