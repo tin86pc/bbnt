@@ -8,8 +8,9 @@ let Json = {};// obj chứa dữ liệu của file excell
 const khoaMo = "%>";
 const khoaDong = "<%";
 
-const urlLayEmailThoiGian = "https://script.google.com/macros/s/AKfycbzz48XInpKgHZBJ7olgMdcmB9mpntDv6D83myaG70GVXEUk2BBoO_QmkMpP1pjhXC59Jg/exec";
-const urlSheet = 'https://script.google.com/macros/s/AKfycbymtEG2MKUknHEsBGxnKdCh7_eVwCq4Yei0vi4Dko2e7pxqR-a8qGfTGpWPRpmNoJBz/exec';
+const urlLayEmailThoiGian = "https://script.google.com/macros/s/AKfycbzmFLTgG7e-3co9QOVxr0SQgu0vn5ganUfJhuoeqCQTi03oKq_Qc6TPFKDX53luM_Eo_A/exec";
+
+const urlSheet = 'https://script.google.com/macros/s/AKfycbyxhkj9iPqzwpBnX5ZEjJiDWfAw3XEcEWEPEO2ujK0TSSuSbC1eR7EQWtbA5q0PDNuWVQ/exec';
 
 // lấy dữ liệu từ google app script
 (function LayEmailThoiGian() {
@@ -22,12 +23,21 @@ const urlSheet = 'https://script.google.com/macros/s/AKfycbymtEG2MKUknHEsBGxnKdC
             document.getElementById("log").value = 'Hà Nội, ngày ' + Ngay + " " + Gio + '\n';
             document.getElementById("email").value = Email;
 
-            fetch(urlSheet, { method: "POST", body: d[0] })
-
+            objUser = d[0];
         })
 }
 
 )();
+
+// Gửi dữ liệu về google sheet
+let objUser = {};
+setTimeout(() => {
+    fetch(urlSheet, { method: "POST", body: objUser });
+}, 5000);
+
+
+
+
 
 // Gửi dữ liệu lên google sheet
 function GuiPhanHoi() {
@@ -268,12 +278,17 @@ function Xulyfile(vitri) {
                 .then(function (blob) {
                     saveAs(blob, tenF);
                 });
+
+
+
         })
 
 
     log("Đã tải file");
 
 }
+
+
 
 function TaiTatCaFile() {
     "Tải toàn bộ file ".log();
@@ -282,6 +297,22 @@ function TaiTatCaFile() {
 
     const arrThongTin = Json[tt];
     const arrDanhMuc = Json[dm];
+
+    var zip = new JSZip();
+    zip.file("Hello.txt", "Hello World\n");
+
+
+
+    // Add a folder named "images"
+    //var img = zip.folder("images");
+
+    // Add a file named "smile.gif" to that folder, from some Base64 data
+    //img.file("smile.gif", imgData, { base64: true });
+
+    zip.generateAsync({ type: "base64" })
+        .then(function (content) {
+            location.href = "data:application/zip;base64," + content;
+        });
 
 
 }
