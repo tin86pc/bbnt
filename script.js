@@ -12,11 +12,9 @@ const urlLayEmailThoiGian = "https://script.google.com/macros/s/AKfycbzmFLTgG7e-
 
 const urlSheet = 'https://script.google.com/macros/s/AKfycbyxhkj9iPqzwpBnX5ZEjJiDWfAw3XEcEWEPEO2ujK0TSSuSbC1eR7EQWtbA5q0PDNuWVQ/exec';
 
-
 (function KhoiTaoBanDau() {
     document.title = phienban;
 })();
-
 
 // lấy dữ liệu từ google app script
 (function LayEmailThoiGian() {
@@ -60,10 +58,17 @@ function GuiPhanHoi() {
 Object.prototype.log = function (x) {
     if (x == undefined) {
         console.log(this.toString());
-    } else {
+    }
+    else {
         console.log(x + " " + this.toString());
     }
 }
+
+Object.prototype.show = function (o) {
+    console.dir(o, { depth: null });
+}
+
+
 
 // Hiển thị log lên textarea
 function log(s) {
@@ -92,25 +97,27 @@ function HienThiCacFile() {
 
 }
 
-let i = 0;
+
 function XuLyToaBienBan() {
-    if (i == 0) {
-        i = 1;
-        var elem = document.getElementById("myBar");
-        var width = 1;
-        var id = setInterval(frame, 50);
-        function frame() {
-            if (width >= 100) {
-                clearInterval(id);
-                TaoDanhSachBienBan();
-                i = 0;
-            } else {
-                width++;
-                elem.style.width = width + "%";
-                elem.innerHTML = width + "%";
-            }
+
+
+    var width = 1;
+    var id = setInterval(frame, 50);
+    function frame() {
+        if (width >= 100) {
+            // kết thúc
+            clearInterval(id);
+            TaoDanhSachBienBan();
+
+        } else {
+            // Hiển thị
+            width++;
+            const myBar = document.getElementById("myBar");
+            myBar.style.width = width + "%";
+            myBar.innerHTML = width + "%";
         }
     }
+
 }
 
 async function TaoDanhSachBienBan() {
@@ -291,8 +298,6 @@ function Xulyfile(vitri) {
 }
 
 
-
-
 function TaiTatCaFile() {
     "Tải toàn bộ file ".log();
 
@@ -419,7 +424,6 @@ function xuLyBiTachXML(xml) {
 
     return sXml;
 }
-
 
 function replaceXml(xml, cu, moi) {
 
