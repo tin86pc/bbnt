@@ -68,8 +68,6 @@ Object.prototype.show = function (o) {
     console.dir(o, { depth: null });
 }
 
-
-
 // Hiển thị log lên textarea
 function log(s) {
     var textarea = document.getElementById('log');
@@ -93,32 +91,95 @@ function HienThiCacFile() {
     output.innerHTML = '<ol>' + element + '</ol>';
 
     document.getElementById("xuly").style.display = "block";
-
-
 }
 
-
+// Xử lý sự kiện bấm nút "Xử lý biên bản"
 function XuLyToaBienBan() {
+    ChayDelay()
+        .then(KiemTraFileDaChon)
+        .then(LayRaFileExcel)
 
 
-    var width = 1;
-    var id = setInterval(frame, 50);
-    function frame() {
-        if (width >= 100) {
-            // kết thúc
-            clearInterval(id);
-            TaoDanhSachBienBan();
 
-        } else {
-            // Hiển thị
-            width++;
-            const myBar = document.getElementById("myBar");
-            myBar.style.width = width + "%";
-            myBar.innerHTML = width + "%";
-        }
-    }
+
+
+        .catch((nd) => {
+            `lỗi: 
+            ${nd}`.log();
+        })
+
 
 }
+
+
+
+function ChayDelay() {
+    return new Promise((resolve, reject) => {
+        let width = 1;
+        //let id = setInterval(frame, 50);
+        let id = setInterval(frame, 5);
+
+        function frame() {
+            if (width >= 100) {
+                // kết thúc
+                clearInterval(id);
+                resolve();
+
+            } else {
+                // Hiển thị
+                width++;
+                const myBar = document.getElementById("myBar");
+                myBar.style.width = width + "%";
+                myBar.innerHTML = width + "%";
+            }
+        }
+    })
+}
+
+
+function KiemTraFileDaChon() {
+    return new Promise((resolve, reject) => {
+        let files = document.getElementById('file').files;
+        if (files.length == 0) {
+            log("Chưa chọn được file");
+            reject("Chưa chọn được file");
+        }
+        else {
+            log(`Đang xử lý ${files.length} file`)
+            resolve({ 'files': files });
+        }
+    })
+}
+
+function LayRaFileExcel(data) {
+    return new Promise((resolve, reject) => {
+
+        let files = data.files;
+        let FileExcell;
+
+        for (i = 0; i < files.length; i++) {
+            const filename = files[i].name;
+            const extension = filename.substring(filename.lastIndexOf(".")).toUpperCase();
+
+            // Kiểm tra có phải là file excell không
+            if (extension === '.XLS' || extension === '.XLSX') {
+                FileExcell = files[i];
+
+            }
+        }
+
+        if (FileExcell === undefined) {
+            log("Không tìm thấy file excel trong các file bạn đã chọn");
+            reject("Không tìm thấy file excel trong các file bạn đã chọn");
+        } else {
+            log(`Đang đọc file excell "${FileExcell.name}" `);
+            data.NameFileExcell = FileExcell.name;
+            resolve(data);
+        }
+    })
+}
+
+
 
 async function TaoDanhSachBienBan() {
 
