@@ -94,24 +94,18 @@ function HienThiCacFile() {
 }
 
 // Xử lý sự kiện bấm nút "Xử lý biên bản"
-function XuLyToaBienBan() {
+function LayDuLieuTuFileExcell() {
     ChayDelay()
         .then(KiemTraFileDaChon)
         .then(LayRaFileExcel)
-
-
-
-
+        .then(DocFileExcell)
+        .then(HienThiFileKetQua)
 
         .catch((nd) => {
             `lỗi: 
             ${nd}`.log();
         })
-
-
 }
-
-
 
 function ChayDelay() {
     return new Promise((resolve, reject) => {
@@ -135,7 +129,6 @@ function ChayDelay() {
         }
     })
 }
-
 
 function KiemTraFileDaChon() {
     return new Promise((resolve, reject) => {
@@ -164,7 +157,6 @@ function LayRaFileExcel(data) {
             // Kiểm tra có phải là file excell không
             if (extension === '.XLS' || extension === '.XLSX') {
                 FileExcell = files[i];
-
             }
         }
 
@@ -173,68 +165,14 @@ function LayRaFileExcel(data) {
             reject("Không tìm thấy file excel trong các file bạn đã chọn");
         } else {
             log(`Đang đọc file excell "${FileExcell.name}" `);
-            data.NameFileExcell = FileExcell.name;
+            data.FileExcell = FileExcell;
             resolve(data);
         }
     })
 }
 
-
-
-async function TaoDanhSachBienBan() {
-
-    let files = document.getElementById('file').files;
-    if (files.length == 0) {
-        alert("Chưa chọn được file");
-        log("Chưa chọn được file")
-        return;
-    } else {
-        log(`Đang xử lý ${files.length} file`)
-    }
-
-    // lấy ra file excell trong các file đã chọn
-    let FileExcell;
-
-    for (i = 0; i < files.length; i++) {
-        const filename = files[i].name;
-        const extension = filename.substring(filename.lastIndexOf(".")).toUpperCase();
-
-        // Kiểm tra có phải là file excell không
-        if (extension === '.XLS' || extension === '.XLSX') {
-            FileExcell = files[i];
-
-        }
-    }
-
-    if (FileExcell === undefined) {
-        alert("Không tìm thấy file excel trong các file bạn đã chọn");
-        log("Không tìm thấy file excel trong các file bạn đã chọn");
-        return;
-    } else {
-        log(`Đang đọc file excell "${FileExcell.name}" `);
-    }
-
-    // lấy dữ liệu từ file excell
-    Json = await excelFileToJsonPromise(FileExcell);
-
-    // Render các file đã xử lý
-    const output = document.getElementById('ketQua');
-    let html = "";
-
-    for (let i = 0; i < Json[dm].length; i++) {
-        html += `<div>`
-        html += `<li> <a onclick="Xulyfile(${i})"> ${Json[dm][i][tenFile]} </a> </li>`
-        html += `</div>`
-    }
-    output.innerHTML = '<ol>' + html + '</ol>';
-    //output.scrollIntoView();
-
-    document.getElementById("daura").style.display = "block";
-
-}
-
-//----------------------
-function excelFileToJsonPromise(file) {
+function DocFileExcell(data) {
+    let file = data.FileExcell;
     return new Promise((resolve, reject) => {
         try {
             let reader = new FileReader();
@@ -273,7 +211,9 @@ function excelFileToJsonPromise(file) {
                     ...danhMuc
                 }
 
-                resolve(output);
+                data.json = output;
+
+                resolve(data);
             }
         }
         catch (e) {
@@ -284,7 +224,183 @@ function excelFileToJsonPromise(file) {
     });
 }
 
+function HienThiFileKetQua(data) {
+    return new Promise((resolve, reject) => {
+        // lấy dữ liệu từ file excell
+        Json = data.json
+
+        // Render các file đã xử lý
+        const output = document.getElementById('ketQua');
+        let html = "";
+
+        for (let i = 0; i < Json[dm].length; i++) {
+            html += `<div>`
+            html += `<li> <a onclick="Xulyfile(${i})"> ${Json[dm][i][tenFile]} </a> </li>`
+            html += `</div>`
+        }
+        output.innerHTML = '<ol>' + html + '</ol>';
+        //output.scrollIntoView();
+
+        document.getElementById("daura").style.display = "block";
+
+    })
+}
+
 function Xulyfile(vitri) {
+    LayFileMau(vitri) // trả về file mẫu
+        .then(LayNoiDungXML)
+        .then(XuLyXMLBiTach)
+        .then(ThayTheNoiDungDanhMuc)
+        .then(ThayTheNoiDungThongTin)
+        .then(ThayTheFileXML)
+
+
+
+        .catch((nd) => {
+            `lỗi: 
+            ${nd}`.log();
+        })
+}
+
+function LayFileMau(vitri) {
+    const oDanhMuc = Json[dm][vitri];
+    let tenFM = oDanhMuc[tenFileMau];
+    log(`Đang tìm file ${tenFM}`)
+
+    return new Promise((resolve, reject) => {
+        let files = document.getElementById('file').files;
+
+        // lấy ra file word mẫu trong các file đã chọn
+        let FileWord;
+
+        for (let i = 0; i < files.length; i++) {
+            // Tìm file mẫu
+            if (files[i].name.toUpperCase() === tenFM.toUpperCase()) {
+                FileWord = files[i];
+            }
+        }
+
+        // Thông báo lỗi không tìm thấy file mẫu
+        if (FileWord == undefined) {
+            log(`Không tìm thấy file mẫu ${tenFM}`)
+            reject(`Không tìm thấy file mẫu ${tenFM}`);
+        } else {
+            log(`Tìm thấy file ${tenFM}`);
+
+            resolve({ vitri: vitri, FileWord: FileWord });
+        }
+    })
+}
+
+function LayNoiDungXML(data) {
+    return new Promise((resolve, reject) => {
+        var zip = new JSZip()
+        zip.loadAsync(data.FileWord)
+            .then(function (word) {
+                let xml = word.file("word/document.xml").async("string");
+                data.xml = xml;
+                xml.log();
+            })
+        resolve(data);
+    });
+
+}
+
+function XuLyXMLBiTach(data) {
+    return new Promise((resolve, reject) => {
+        //Chuyển string thành XMLDocument
+        const xmlDoc = new DOMParser().parseFromString(data.xml, "text/xml");
+
+        // Xử lý xml
+
+        let awt = xmlDoc.getElementsByTagName('w:t');
+        for (let i = 0; i < awt.length; i++) {
+
+            for (let j = 0; j < awt[i].childNodes.length; j++) {
+
+                if (awt[i].childNodes[j].nodeValue.includes("<%") && !awt[i].childNodes[j].nodeValue.includes("%>")) {
+
+                    let k = 0;
+                    let ss = "";
+
+                    do {
+                        ss += awt[i + k].childNodes[j].nodeValue;
+                        awt[i + k].childNodes[j].nodeValue = "";
+
+                        k++;
+                    } while (
+                        !awt[i + k].childNodes[j].nodeValue.includes("%>") ||
+                        (awt[i + k].childNodes[j].nodeValue.includes("<%") && awt[i + k].childNodes[j].nodeValue.includes("%>"))
+
+                    )// thoát khi false
+
+                    ss += awt[i + k].childNodes[j].nodeValue;
+                    awt[i + k].childNodes[j].nodeValue = "";
+
+                    awt[i].childNodes[j].nodeValue = ss;
+                }
+
+            }
+        }
+
+        // chuyển XMLDocument thành string
+        const sXml = new XMLSerializer().serializeToString(xmlDoc);
+
+        data.xml = sXml;
+        resolve(data);
+    })
+}
+
+function ThayTheNoiDungDanhMuc(data) {
+    return new Promise((resolve, reject) => {
+        for (const [key, value] of Object.entries(Json[dm][data.vitri])) {
+            let cu = key.toString();
+            let moi = value.toString();
+            data.xml = replaceXml(data.xml, cu, moi);
+        }
+
+        resolve(data);
+    })
+}
+
+function ThayTheNoiDungThongTin(data) {
+    return new Promise((resolve, reject) => {
+        const arrThongTin = Json[tt];
+        arrThongTin.forEach(element => {
+            let cu = Object.keys(element).toString();
+            let moi = Object.values(element).toString();
+            data.xml = replaceXml(data.xml, cu, moi);
+        });
+
+        resolve(data);
+    })
+}
+
+
+function ThayTheFileXML(data) {
+    return new Promise((resolve, reject) => {
+        const tenF = Json[dm][data.vitri][tenFile];
+
+        var zip = new JSZip()
+        zip.loadAsync(data.FileWord)
+        zip.file("word/document.xml", data.xml);
+
+
+        zip.generateAsync({ type: "blob" })
+            .then(function (content) {
+                saveAs(content, tenF);
+            });
+
+    })
+}
+
+
+
+
+
+
+function Xulyfile4(vitri) {
+
     const oDanhMuc = Json[dm][vitri];
     let tenFM = oDanhMuc[tenFileMau];
     log(`Đang tìm file ${tenFM}`)
@@ -310,18 +426,20 @@ function Xulyfile(vitri) {
         log(`Tìm thấy file ${tenFM}`);
     }
 
+
+
     // Tạo file đầu ra
-    const tenF = oDanhMuc[tenFile];
+    const tenF = Json[dm][vitri][tenFile];
     const arrThongTin = Json[tt];
 
     var zip = new JSZip()
+
     zip.loadAsync(FileWord)
         .then(function (word) {
             let xml = word.file("word/document.xml").async("string");
             return xml
         })
         .then(function (xml) {
-
 
             xml = xuLyBiTachXML(xml);
 
@@ -338,7 +456,6 @@ function Xulyfile(vitri) {
             });
 
 
-
             // Thay thế file
             zip.file("word/document.xml", xml);
 
@@ -346,6 +463,7 @@ function Xulyfile(vitri) {
             // Tải xuống file
             zip.generateAsync({ type: "blob" })
                 .then(function (blob) {
+
                     saveAs(blob, tenF);
                 });
 
@@ -357,7 +475,6 @@ function Xulyfile(vitri) {
     log("Đã tải file");
 
 }
-
 
 function TaiTatCaFile() {
     "Tải toàn bộ file ".log();
