@@ -65,7 +65,7 @@ Object.prototype.log = function (x) {
 }
 
 Object.prototype.show = function (o) {
-    console.dir(o, { depth: null });
+    console.dir(o);
 }
 
 // Hiển thị log lên textarea
@@ -287,6 +287,7 @@ function LayFileMau(vitri) {
         } else {
             log(`Tìm thấy file ${tenFM}`);
 
+
             resolve({ vitri: vitri, FileWord: FileWord });
         }
     })
@@ -295,13 +296,19 @@ function LayFileMau(vitri) {
 function LayNoiDungXML(data) {
     return new Promise((resolve, reject) => {
         var zip = new JSZip()
+
         zip.loadAsync(data.FileWord)
             .then(function (word) {
-                let xml = word.file("word/document.xml").async("string");
-                data.xml = xml;
-                xml.log();
+                let xml = word.file("word/document.xml")
+                    .async("string")
+                    .then(function (d) {
+                        data.xml = d;
+
+                        resolve(data);
+                    })
+
             })
-        resolve(data);
+
     });
 
 }
@@ -309,6 +316,7 @@ function LayNoiDungXML(data) {
 function XuLyXMLBiTach(data) {
     return new Promise((resolve, reject) => {
         //Chuyển string thành XMLDocument
+
         const xmlDoc = new DOMParser().parseFromString(data.xml, "text/xml");
 
         // Xử lý xml
@@ -376,105 +384,28 @@ function ThayTheNoiDungThongTin(data) {
     })
 }
 
-
 function ThayTheFileXML(data) {
     return new Promise((resolve, reject) => {
         const tenF = Json[dm][data.vitri][tenFile];
 
         var zip = new JSZip()
+
         zip.loadAsync(data.FileWord)
-        zip.file("word/document.xml", data.xml);
+            .then(function (word) {
+                data.xml.show();
+                word.file("word/document.xml", data.xml);
+                word.generateAsync({ type: "blob" })
+                    .then(function (content) {
+                        saveAs(content, tenF);
+                    });
 
-
-        zip.generateAsync({ type: "blob" })
-            .then(function (content) {
-                saveAs(content, tenF);
-            });
+            })
 
     })
 }
 
 
 
-
-
-
-function Xulyfile4(vitri) {
-
-    const oDanhMuc = Json[dm][vitri];
-    let tenFM = oDanhMuc[tenFileMau];
-    log(`Đang tìm file ${tenFM}`)
-
-    let files = document.getElementById('file').files;
-
-    // lấy ra file word mẫu trong các file đã chọn
-    let FileWord;
-
-    for (let i = 0; i < files.length; i++) {
-        // Tìm file mẫu
-        if (files[i].name.toUpperCase() === tenFM.toUpperCase()) {
-            FileWord = files[i];
-        }
-    }
-
-    // Thông báo lỗi không tìm thấy file mẫu
-    if (FileWord == undefined) {
-        alert(`Không tìm thấy file mẫu ${tenFM}`);
-        log(`Không tìm thấy file mẫu ${tenFM}`)
-        return;
-    } else {
-        log(`Tìm thấy file ${tenFM}`);
-    }
-
-
-
-    // Tạo file đầu ra
-    const tenF = Json[dm][vitri][tenFile];
-    const arrThongTin = Json[tt];
-
-    var zip = new JSZip()
-
-    zip.loadAsync(FileWord)
-        .then(function (word) {
-            let xml = word.file("word/document.xml").async("string");
-            return xml
-        })
-        .then(function (xml) {
-
-            xml = xuLyBiTachXML(xml);
-
-            for (const [key, value] of Object.entries(oDanhMuc)) {
-                let cu = key.toString();
-                let moi = value.toString();
-                xml = replaceXml(xml, cu, moi);
-            }
-
-            arrThongTin.forEach(element => {
-                let cu = Object.keys(element).toString();
-                let moi = Object.values(element).toString();
-                xml = replaceXml(xml, cu, moi);
-            });
-
-
-            // Thay thế file
-            zip.file("word/document.xml", xml);
-
-
-            // Tải xuống file
-            zip.generateAsync({ type: "blob" })
-                .then(function (blob) {
-
-                    saveAs(blob, tenF);
-                });
-
-
-
-        })
-
-
-    log("Đã tải file");
-
-}
 
 function TaiTatCaFile() {
     "Tải toàn bộ file ".log();
@@ -557,6 +488,89 @@ function TaiTatCaFile() {
             saveAs(content, "output.zip");
         });
 
+
+}
+
+
+
+
+
+
+
+function XulyfileBackup(vitri) {
+
+    const oDanhMuc = Json[dm][vitri];
+    let tenFM = oDanhMuc[tenFileMau];
+    log(`Đang tìm file ${tenFM}`)
+
+    let files = document.getElementById('file').files;
+
+    // lấy ra file word mẫu trong các file đã chọn
+    let FileWord;
+
+    for (let i = 0; i < files.length; i++) {
+        // Tìm file mẫu
+        if (files[i].name.toUpperCase() === tenFM.toUpperCase()) {
+            FileWord = files[i];
+        }
+    }
+
+    // Thông báo lỗi không tìm thấy file mẫu
+    if (FileWord == undefined) {
+        alert(`Không tìm thấy file mẫu ${tenFM}`);
+        log(`Không tìm thấy file mẫu ${tenFM}`)
+        return;
+    } else {
+        log(`Tìm thấy file ${tenFM}`);
+    }
+
+
+
+    // Tạo file đầu ra
+    const tenF = Json[dm][vitri][tenFile];
+    const arrThongTin = Json[tt];
+
+    var zip = new JSZip()
+
+    zip.loadAsync(FileWord)
+        .then(function (word) {
+            let xml = word.file("word/document.xml").async("string");
+            return xml
+        })
+        .then(function (xml) {
+
+            xml = xuLyBiTachXML(xml);
+
+            for (const [key, value] of Object.entries(oDanhMuc)) {
+                let cu = key.toString();
+                let moi = value.toString();
+                xml = replaceXml(xml, cu, moi);
+            }
+
+            arrThongTin.forEach(element => {
+                let cu = Object.keys(element).toString();
+                let moi = Object.values(element).toString();
+                xml = replaceXml(xml, cu, moi);
+            });
+
+
+            // Thay thế file
+            zip.file("word/document.xml", xml);
+
+
+            // Tải xuống file
+            zip.generateAsync({ type: "blob" })
+                .then(function (blob) {
+
+                    saveAs(blob, tenF);
+                });
+
+
+
+        })
+
+
+    log("Đã tải file");
 
 }
 
