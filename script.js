@@ -64,8 +64,8 @@ Object.prototype.log = function (x) {
     }
 }
 
-Object.prototype.show = function (o) {
-    console.dir(o);
+const show = function (o) {
+    console.log(JSON.stringify(o, null, "    "));
 }
 
 // Hiển thị log lên textarea
@@ -246,6 +246,11 @@ function HienThiFileKetQua(data) {
     })
 }
 
+// vitri:
+// FileWord
+// xml:
+
+
 function Xulyfile(vitri) {
     LayFileMau(vitri) // trả về file mẫu
         .then(LayNoiDungXML)
@@ -253,7 +258,7 @@ function Xulyfile(vitri) {
         .then(ThayTheNoiDungDanhMuc)
         .then(ThayTheNoiDungThongTin)
         .then(ThayTheFileXML)
-
+        .then(TaiFileWord)
 
 
         .catch((nd) => {
@@ -287,27 +292,31 @@ function LayFileMau(vitri) {
         } else {
             log(`Tìm thấy file ${tenFM}`);
 
+            var zip = new JSZip();
+            let word = zip.loadAsync(FileWord);
 
-            resolve({ vitri: vitri, FileWord: FileWord });
+            const data = {
+                vitri: vitri,
+                word: word,
+                tenF: Json[dm][vitri][tenFile]
+            }
+
+            resolve(data);
         }
     })
 }
 
 function LayNoiDungXML(data) {
     return new Promise((resolve, reject) => {
-        var zip = new JSZip()
 
-        zip.loadAsync(data.FileWord)
-            .then(function (word) {
-                let xml = word.file("word/document.xml")
-                    .async("string")
-                    .then(function (d) {
-                        data.xml = d;
-
-                        resolve(data);
-                    })
-
-            })
+        data.word.then(function (w) {
+            w.file("word/document.xml")
+                .async("string")
+                .then(function (xml) {
+                    data.xml = xml;
+                    resolve(data);
+                })
+        })
 
     });
 
@@ -386,26 +395,25 @@ function ThayTheNoiDungThongTin(data) {
 
 function ThayTheFileXML(data) {
     return new Promise((resolve, reject) => {
-        const tenF = Json[dm][data.vitri][tenFile];
 
-        var zip = new JSZip()
-
-        zip.loadAsync(data.FileWord)
-            .then(function (word) {
-                data.xml.show();
-                word.file("word/document.xml", data.xml);
-                word.generateAsync({ type: "blob" })
-                    .then(function (content) {
-                        saveAs(content, tenF);
-                    });
-
-            })
+        data.word.then(function (word) {
+            data.word = word.file("word/document.xml", data.xml);
+            resolve(data);
+        })
 
     })
 }
 
+function TaiFileWord(data) {
+    return new Promise((resolve, reject) => {
+        data.word.generateAsync({ type: "blob" })
+            .then(function (content) {
+                saveAs(content, data.tenF);
+            });
+        resolve(data);
 
-
+    })
+}
 
 function TaiTatCaFile() {
     "Tải toàn bộ file ".log();
@@ -490,12 +498,6 @@ function TaiTatCaFile() {
 
 
 }
-
-
-
-
-
-
 
 function XulyfileBackup(vitri) {
 
