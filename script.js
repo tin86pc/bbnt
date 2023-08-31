@@ -246,10 +246,6 @@ function HienThiFileKetQua(data) {
     })
 }
 
-// vitri:
-// FileWord
-// xml:
-
 
 function Xulyfile(vitri) {
     LayFileMau(vitri) // trả về file mẫu
@@ -292,13 +288,14 @@ function LayFileMau(vitri) {
         } else {
             log(`Tìm thấy file ${tenFM}`);
 
-            var zip = new JSZip();
+            let zip = new JSZip();
             let word = zip.loadAsync(FileWord);
+            let tenF = Json[dm][vitri][tenFile];
 
             const data = {
                 vitri: vitri,
                 word: word,
-                tenF: Json[dm][vitri][tenFile]
+                tenF: tenF
             }
 
             resolve(data);
