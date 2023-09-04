@@ -1,4 +1,93 @@
+function TaiTatCaFile() {
+    "Tải toàn bộ file ".log();
 
-[
-{"Tên file":"00 Bia ho so quan ly chat luong.docx","Tên file mẫu":"Mau 0 Bia ho so quan ly chat luong.docx","<%ngày văn bản%>":"T","<%số văn bản%>":"T","<%đối tượng nghiệm thu%>":"T"},{"Tên file":"01 BBNT vat lieu.docx","Tên file mẫu":"Mau 1 BBNT vat lieu.docx","<%ngày văn bản%>":"ngày 02 tháng 11 năm 2022","<%số văn bản%>":"01/VL","<%đối tượng nghiệm thu%>":"Vật tư, vật liệu hệ thống phòng cháy chữa cháy và exít, sự cố trước khi đưa vào công trình."},
-{"Tên file":"02 BBNT cong viec xay dung.docx","Tên file mẫu":"Mau 2 BBNT cong viec xay dung.docx","<%ngày văn bản%>":"ngày 01 tháng 12 năm 2022","<%số văn bản%>":"01/CV","<%đối tượng nghiệm thu%>":"Công tác đào đất cho đường ống kẽm cấp nước chữa cháy trong nhà, ngoài nhà, trụ chữa cháy ngoài nhà"},{"Tên file":"03 BBNT cong viec xay dung.docx","Tên file mẫu":"Mau 2 BBNT cong viec xay dung.docx","<%ngày văn bản%>":"ngày 02 tháng 12 năm 2022","<%số văn bản%>":"02/CV","<%đối tượng nghiệm thu%>":"Công tác lắp đặt đường ống thép cấp nước chữa cháy, phụ kiện ống thép, van chữa cháy các loại, hộp đựng phương tiện chữa cháy của hệ thống chữa cháy bằng nước ngoài nhà, trong nhà"},{"Tên file":"04 BBNT thu ap.docx","Tên file mẫu":"Mau 3 BBNT thu ap.docx","<%ngày văn bản%>":"ngày 12 tháng 12 năm 2022","<%số văn bản%>":"01/TA","<%đối tượng nghiệm thu%>":"Thử áp lực đường ống cấp nước chữa cháy"},{"Tên file":"05 BBNT cong viec xay dung.docx","Tên file mẫu":"Mau 2 BBNT cong viec xay dung.docx","<%ngày văn bản%>":"ngày 14 tháng 12 năm 2022","<%số văn bản%>":"03/CV","<%đối tượng nghiệm thu%>":"Công tác đắp đất cho đường ống thép cấp nước chữa cháy ngoài nhà, trụ chữa cháy ngoài nhà"},{"Tên file":"06 BBNT cong viec xay dung.docx","Tên file mẫu":"Mau 2 BBNT cong viec xay dung.docx","<%ngày văn bản%>":"ngày 15 tháng 12 năm 2022","<%số văn bản%>":"04/CV","<%đối tượng nghiệm thu%>":"Công tác lắp đặt dây tín hiệu báo cháy, cấp nguồn, ống ghen bảo vệ dây dẫn cho hệ thống báo cháy, đèn exit, đèn sự cố"},{"Tên file":"07 BBNT cong viec xay dung.docx","Tên file mẫu":"Mau 2 BBNT cong viec xay dung.docx","<%ngày văn bản%>":"ngày 27 tháng 01 năm 2023","<%số văn bản%>":"05/CV","<%đối tượng nghiệm thu%>":"Công tác lắp đặt tủ báo cháy, đầu báo cháy, chuông, đèn báo cháy, nút ấn báo cháy, các đèn exit, đèn sự cố"},{"Tên file":"08 BBNT cong viec xay dung.docx","Tên file mẫu":"Mau 2 BBNT cong viec xay dung.docx","<%ngày văn bản%>":"ngày 27 tháng 01 năm 2023","<%số văn bản%>":"06/CV","<%đối tượng nghiệm thu%>":"Công tác lắp đặt đầu phun, cuộn vòi, bình chữa cháy, nội quy tiêu lệnh, trụ chữa cháy, trụ tiếp nước, phòng bơm chữa cháy"},{"Tên file":"09 BBNT don dong khong tai.docx","Tên file mẫu":"Mau 4 BBNT don dong khong tai.docx","<%ngày văn bản%>":"ngày 28 tháng 01 năm 2023","<%số văn bản%>":"01/ĐĐKT","<%đối tượng nghiệm thu%>":"Chạy thử đơn động không tải hệ thống báo cháy tự động, đèn exit, đèn sự cố"},{"Tên file":"10 BBNT don dong khong tai.docx","Tên file mẫu":"Mau 4 BBNT don dong khong tai.docx","<%ngày văn bản%>":"ngày 28 tháng 01 năm 2023","<%số văn bản%>":"02/ĐĐKT","<%đối tượng nghiệm thu%>":"Chạy thử đơn động không tải tủ điều khiển bơm, bơm chữa cháy"},{"Tên file":"11 BBNT lien dong khong tai.docx","Tên file mẫu":"Mau 5 BBNT lien dong khong tai.docx","<%ngày văn bản%>":"ngày 29 tháng 01 năm 2023","<%số văn bản%>":"01/LĐKT","<%đối tượng nghiệm thu%>":"Chạy thử liên động không tải hệ thống báo cháy, hệ thống chữa cháy và đèn exit, đèn sự cố"},{"Tên file":"12 BBNT lien dong co tai.docx","Tên file mẫu":"Mau 6 BBNT lien dong co tai.docx","<%ngày văn bản%>":"ngày 30 tháng 01 năm 2023","<%số văn bản%>":"01/LĐCT","<%đối tượng nghiệm thu%>":"Chạy thử liên động có tải hệ thống báo cháy, hệ thống chữa cháy và đèn exit, đèn sự cố"},{"Tên file":"13 BBNT hoan thanh hang muc cong trinh.docx","Tên file mẫu":"Mau 7 BBNT hoan thanh hang muc cong trinh.docx","<%ngày văn bản%>":"ngày 31 tháng 01 năm 2023","<%số văn bản%>":"T","<%đối tượng nghiệm thu%>":"Hoàn thành hạng mục công trình: Hệ thống phòng cháy chữa cháy cho công trình để đưa vào sử dụng"},{"Tên file":"14 BBNT ban giao.docx","Tên file mẫu":"Mau 8 BBNT ban giao.docx","<%ngày văn bản%>":"ngày 31 tháng 01 năm 2023","<%số văn bản%>":"T","<%đối tượng nghiệm thu%>":"T"},{"Tên file":"15 BBNT chuyen giao.docx","Tên file mẫu":"Mau 9 BBNT chuyen giao.docx","<%ngày văn bản%>":"ngày 31 tháng 01 năm 2023","<%số văn bản%>":"T","<%đối tượng nghiệm thu%>":"T"}]
+    let ghichu = "Tạo biên bản nghiệm thu\n"
+
+    var zipCha = new JSZip();
+
+    // Tạo folder kết xuất
+    var ketxuat = zipCha.folder("ket xuat");
+
+
+    const DanhMuc = Json[dm];
+    const length = DanhMuc.length;
+
+    for (vitri = 0; vitri < length; vitri++) {
+        const oDanhMuc = Json[dm][vitri];
+        let tenFM = oDanhMuc[tenFileMau];
+
+        let files = document.getElementById('file').files;
+
+        // lấy ra file word mẫu trong các file đã chọn
+        let FileWord;
+
+        for (let i = 0; i < files.length; i++) {
+            // Tìm file mẫu
+            if (files[i].name.toUpperCase() === tenFM.toUpperCase()) {
+                FileWord = files[i];
+            }
+        }
+
+        // Thông báo lỗi không tìm thấy file mẫu
+        if (FileWord == undefined) {
+            ghichu += `Không tìm thấy file mẫu ${tenFM}`;
+        }
+        else {
+
+            const tenF = oDanhMuc[tenFile];
+            const arrThongTin = Json[tt];
+
+            var zip = new JSZip()
+            zip.loadAsync(FileWord)
+                .then(function (word) {
+                    let xml = word.file("word/document.xml").async("string");
+                    return xml
+                })
+                .then(function (xml) {
+
+                    xml = xuLyBiTachXML(xml);
+
+                    for (const [key, value] of Object.entries(oDanhMuc)) {
+                        let cu = key.toString();
+                        let moi = value.toString();
+                        xml = replaceXml(xml, cu, moi);
+                    }
+
+                    arrThongTin.forEach(element => {
+                        let cu = Object.keys(element).toString();
+                        let moi = Object.values(element).toString();
+                        xml = replaceXml(xml, cu, moi);
+                    });
+
+
+                    // Thay thế file
+                    zip.file("word/document.xml", xml);
+
+                    ketxuat.file(tenF, "zip");
+
+
+                })
+
+        }
+
+    }
+
+    zipCha.file("Ghi chu.txt", ghichu);
+
+    zipCha.generateAsync({ type: "blob" })
+        .then(function (content) {
+            saveAs(content, "output.zip");
+        });
+
+
+}
+
+
+<textarea name="textarea" placeholder="Enter the text..."></textarea>
+
+$(document).ready(function () {
+    if ($("textarea").value !== "") {
+        alert($("textarea").value);
+    }
+  
+});

@@ -54,20 +54,6 @@ function GuiPhanHoi() {
         });
 }
 
-// Hàm console.log kiểu mới
-Object.prototype.log = function (x) {
-    if (x == undefined) {
-        console.log(this.toString());
-    }
-    else {
-        console.log(x + " " + this.toString());
-    }
-}
-
-const show = function (o) {
-    console.log(JSON.stringify(o, null, "    "));
-}
-
 // Hiển thị log lên textarea
 function log(s) {
     var textarea = document.getElementById('log');
@@ -102,8 +88,7 @@ function LayDuLieuTuFileExcell() {
         .then(HienThiFileKetQua)
 
         .catch((nd) => {
-            `lỗi: 
-            ${nd}`.log();
+            console.log(`lỗi: ${nd}`);
         })
 }
 
@@ -246,7 +231,6 @@ function HienThiFileKetQua(data) {
     })
 }
 
-
 function Xulyfile(vitri) {
     LayFileMau(vitri) // trả về file mẫu
         .then(LayNoiDungXML)
@@ -258,8 +242,7 @@ function Xulyfile(vitri) {
 
 
         .catch((nd) => {
-            `lỗi: 
-            ${nd}`.log();
+            console.log(`lỗi: ${nd}`);
         })
 }
 
@@ -323,10 +306,11 @@ function XuLyXMLBiTach(data) {
     return new Promise((resolve, reject) => {
         //Chuyển string thành XMLDocument
 
-        const xmlDoc = new DOMParser().parseFromString(data.xml, "text/xml");
+        let xmlDoc = new DOMParser().parseFromString(data.xml, "text/xml");
+
+        console.log()
 
         // Xử lý xml
-
         let awt = xmlDoc.getElementsByTagName('w:t');
         for (let i = 0; i < awt.length; i++) {
 
@@ -337,21 +321,22 @@ function XuLyXMLBiTach(data) {
                     let k = 0;
                     let ss = "";
 
+
                     do {
+                        const cn = awt[i + k].childNodes[j].nodeValue;
+
                         ss += awt[i + k].childNodes[j].nodeValue;
                         awt[i + k].childNodes[j].nodeValue = "";
 
                         k++;
-                    } while (
-                        !awt[i + k].childNodes[j].nodeValue.includes("%>") ||
-                        (awt[i + k].childNodes[j].nodeValue.includes("<%") && awt[i + k].childNodes[j].nodeValue.includes("%>"))
-
-                    )// thoát khi false
+                    } while (!awt[i + k].childNodes[j].nodeValue.includes("%>") || (awt[i + k].childNodes[j].nodeValue.includes("<%") && awt[i + k].childNodes[j].nodeValue.includes("%>")))// thoát khi false
 
                     ss += awt[i + k].childNodes[j].nodeValue;
                     awt[i + k].childNodes[j].nodeValue = "";
 
                     awt[i].childNodes[j].nodeValue = ss;
+
+
                 }
 
             }
@@ -413,80 +398,37 @@ function TaiFileWord(data) {
 }
 
 function TaiTatCaFile() {
-    "Tải toàn bộ file ".log();
+    console.log("Tải toàn bộ file ");
 
-    let ghichu = "Tạo biên bản nghiệm thu\n"
-
-    var zipCha = new JSZip();
+    let zipCha = new JSZip();
 
     // Tạo folder kết xuất
     var ketxuat = zipCha.folder("ket xuat");
-
-
     const DanhMuc = Json[dm];
     const length = DanhMuc.length;
 
     for (vitri = 0; vitri < length; vitri++) {
-        const oDanhMuc = Json[dm][vitri];
-        let tenFM = oDanhMuc[tenFileMau];
 
-        let files = document.getElementById('file').files;
-
-        // lấy ra file word mẫu trong các file đã chọn
-        let FileWord;
-
-        for (let i = 0; i < files.length; i++) {
-            // Tìm file mẫu
-            if (files[i].name.toUpperCase() === tenFM.toUpperCase()) {
-                FileWord = files[i];
-            }
-        }
-
-        // Thông báo lỗi không tìm thấy file mẫu
-        if (FileWord == undefined) {
-            ghichu += `Không tìm thấy file mẫu ${tenFM}`;
-        }
-        else {
-
-            const tenF = oDanhMuc[tenFile];
-            const arrThongTin = Json[tt];
-
-            var zip = new JSZip()
-            zip.loadAsync(FileWord)
-                .then(function (word) {
-                    let xml = word.file("word/document.xml").async("string");
-                    return xml
-                })
-                .then(function (xml) {
-
-                    xml = xuLyBiTachXML(xml);
-
-                    for (const [key, value] of Object.entries(oDanhMuc)) {
-                        let cu = key.toString();
-                        let moi = value.toString();
-                        xml = replaceXml(xml, cu, moi);
-                    }
-
-                    arrThongTin.forEach(element => {
-                        let cu = Object.keys(element).toString();
-                        let moi = Object.values(element).toString();
-                        xml = replaceXml(xml, cu, moi);
-                    });
+        LayFileMau(vitri) // trả về file mẫu
+            .then(LayNoiDungXML)
+            //.then(XuLyXMLBiTach)
+            .then(ThayTheNoiDungDanhMuc)
+            .then(ThayTheNoiDungThongTin)
+            .then(ThayTheFileXML)
+            .then(d => {
+                ketxuat.file(d.tenF, "zip");
+            })
 
 
-                    // Thay thế file
-                    zip.file("word/document.xml", xml);
-
-                    ketxuat.file(tenF, "zip");
-
-
-                })
-
-        }
+            .catch((nd) => {
+                console.log(nd);
+            })
 
     }
 
-    zipCha.file("Ghi chu.txt", ghichu);
+    var textarea = document.getElementById('log');
+
+    zipCha.file("Ghi chu.txt", textarea.value);
 
     zipCha.generateAsync({ type: "blob" })
         .then(function (content) {
@@ -494,126 +436,7 @@ function TaiTatCaFile() {
         });
 
 
-}
 
-function XulyfileBackup(vitri) {
-
-    const oDanhMuc = Json[dm][vitri];
-    let tenFM = oDanhMuc[tenFileMau];
-    log(`Đang tìm file ${tenFM}`)
-
-    let files = document.getElementById('file').files;
-
-    // lấy ra file word mẫu trong các file đã chọn
-    let FileWord;
-
-    for (let i = 0; i < files.length; i++) {
-        // Tìm file mẫu
-        if (files[i].name.toUpperCase() === tenFM.toUpperCase()) {
-            FileWord = files[i];
-        }
-    }
-
-    // Thông báo lỗi không tìm thấy file mẫu
-    if (FileWord == undefined) {
-        alert(`Không tìm thấy file mẫu ${tenFM}`);
-        log(`Không tìm thấy file mẫu ${tenFM}`)
-        return;
-    } else {
-        log(`Tìm thấy file ${tenFM}`);
-    }
-
-
-
-    // Tạo file đầu ra
-    const tenF = Json[dm][vitri][tenFile];
-    const arrThongTin = Json[tt];
-
-    var zip = new JSZip()
-
-    zip.loadAsync(FileWord)
-        .then(function (word) {
-            let xml = word.file("word/document.xml").async("string");
-            return xml
-        })
-        .then(function (xml) {
-
-            xml = xuLyBiTachXML(xml);
-
-            for (const [key, value] of Object.entries(oDanhMuc)) {
-                let cu = key.toString();
-                let moi = value.toString();
-                xml = replaceXml(xml, cu, moi);
-            }
-
-            arrThongTin.forEach(element => {
-                let cu = Object.keys(element).toString();
-                let moi = Object.values(element).toString();
-                xml = replaceXml(xml, cu, moi);
-            });
-
-
-            // Thay thế file
-            zip.file("word/document.xml", xml);
-
-
-            // Tải xuống file
-            zip.generateAsync({ type: "blob" })
-                .then(function (blob) {
-
-                    saveAs(blob, tenF);
-                });
-
-
-
-        })
-
-
-    log("Đã tải file");
-
-}
-
-function xuLyBiTachXML(xml) {
-    //Chuyển string thành XMLDocument
-    const xmlDoc = new DOMParser().parseFromString(xml, "text/xml");
-
-    // Xử lý xml
-
-    let awt = xmlDoc.getElementsByTagName('w:t');
-    for (let i = 0; i < awt.length; i++) {
-
-        for (let j = 0; j < awt[i].childNodes.length; j++) {
-
-            if (awt[i].childNodes[j].nodeValue.includes("<%") && !awt[i].childNodes[j].nodeValue.includes("%>")) {
-
-                let k = 0;
-                let ss = "";
-
-                do {
-                    ss += awt[i + k].childNodes[j].nodeValue;
-                    awt[i + k].childNodes[j].nodeValue = "";
-
-                    k++;
-                } while (
-                    !awt[i + k].childNodes[j].nodeValue.includes("%>") ||
-                    (awt[i + k].childNodes[j].nodeValue.includes("<%") && awt[i + k].childNodes[j].nodeValue.includes("%>"))
-
-                )// thoát khi false
-
-                ss += awt[i + k].childNodes[j].nodeValue;
-                awt[i + k].childNodes[j].nodeValue = "";
-
-                awt[i].childNodes[j].nodeValue = ss;
-            }
-
-        }
-    }
-
-    // chuyển XMLDocument thành string
-    const sXml = new XMLSerializer().serializeToString(xmlDoc);
-    //sXml.log();
-
-    return sXml;
 }
 
 function replaceXml(xml, cu, moi) {
