@@ -388,9 +388,12 @@ function ThayTheFileXML(data) {
 
 function TaiFileWord(data) {
     return new Promise((resolve, reject) => {
-        data.word.generateAsync({ type: "blob" })
-            .then(function (content) {
-                saveAs(content, data.tenF);
+        data.word.generateAsync({
+            type: "blob",
+            mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        })
+            .then(function (blob) {
+                saveAs(blob, data.tenF);
             });
         resolve(data);
 
@@ -416,7 +419,18 @@ function TaiTatCaFile() {
             .then(ThayTheNoiDungThongTin)
             .then(ThayTheFileXML)
             .then(d => {
-                ketxuat.file(d.tenF, "zip");
+                d.word.generateAsync({
+                    type: "blob",
+                    mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                })
+                    .then(function (content) {
+                        //saveAs(content, d.tenF);
+                        zipCha.file("Ghi chu.txt", textarea.value);
+                        //ketxuat.file("Ghi chu.txt", textarea.value);
+
+                        //ketxuat.file(d.tenF, content);
+                    })
+
             })
 
 
