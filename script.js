@@ -365,41 +365,25 @@ function newComic() {
 
 
 function SoSanh_rRr(a, b) {
-    console.log('SoSanh_rRr');
+    //console.log('SoSanh_rRr');
 
     let kq = true;
 
     for (i = 0; i < a[0].childNodes.length; i++) {
 
-        console.log("a");
-        console.log(a[0].childNodes[i]);
+        const xa = new XMLSerializer().serializeToString(a[0].childNodes[i]);
+        //console.log(xa);
 
-        console.log("b");
-        console.log(b[0].childNodes[i]);
+        const xb = new XMLSerializer().serializeToString(b[0].childNodes[i]);
+        //console.log(xb);
 
-
-
-
-        if (a[0].childNodes[i].nodeValue == undefined) {
+        if (xa !== xb) {
             kq = false
-            console.log("11");
-            return;
-        }
-        if (b[0].childNodes[i].nodeValue == undefined) {
-            kq = false
-            console.log("22");
-            return;
-        }
-
-        if (a[0].childNodes[i].nodeValue.toString() !== b[0].childNodes[i].nodeValue.toString()) {
-            kq = false
-            console.log("33");
             return;
         }
 
     }
-    console.log("true");
-
+    //console.log("true");
 
     return kq;
 }
@@ -422,7 +406,7 @@ function SuaLoiXml(data) {
 
                         const wrPr = wr[iwr].getElementsByTagName("w:rPr")
                         const wt = wr[iwr].getElementsByTagName("w:t")
-                        console.log(iwr);
+                        //console.log(iwr);
 
                         if (wt[0] != undefined && wt0[0] != undefined) {
 
