@@ -355,21 +355,53 @@ function LayNoiDungXML(data) {
 
 }
 
-function SoSanh_rRr(a, b) {
-    console.log('chuyen thanh string');
-    console.log(a);
+function newComic() {
+    var elem = document.querySelector("#genreList").selectedOptions;
+    console.log(elem);
+    for (var i = 0; i < elem.length; i++) {
+        console.log(elem[i].attributes[0].nodeValue); //second console output
+    }
+}
 
-    console.log(a[0].childNodes.length);
+
+function SoSanh_rRr(a, b) {
+    console.log('SoSanh_rRr');
+
+    let kq = true;
 
     for (i = 0; i < a[0].childNodes.length; i++) {
-        console.log(a[0].childNodes[i].childNodes[0].nodeValue);
+
+        console.log("a");
+        console.log(a[0].childNodes[i]);
+
+        console.log("b");
+        console.log(b[0].childNodes[i]);
+
+
+
+
+        if (a[0].childNodes[i].nodeValue == undefined) {
+            kq = false
+            console.log("11");
+            return;
+        }
+        if (b[0].childNodes[i].nodeValue == undefined) {
+            kq = false
+            console.log("22");
+            return;
+        }
+
+        if (a[0].childNodes[i].nodeValue.toString() !== b[0].childNodes[i].nodeValue.toString()) {
+            kq = false
+            console.log("33");
+            return;
+        }
 
     }
+    console.log("true");
 
 
-
-
-    return true;
+    return kq;
 }
 
 function SuaLoiXml(data) {
@@ -390,14 +422,14 @@ function SuaLoiXml(data) {
 
                         const wrPr = wr[iwr].getElementsByTagName("w:rPr")
                         const wt = wr[iwr].getElementsByTagName("w:t")
-                        //console.log(iwr);
+                        console.log(iwr);
 
                         if (wt[0] != undefined && wt0[0] != undefined) {
 
                             if (SoSanh_rRr(wrPr0, wrPr) == true) {
-                                wt[0].childNodes[0].nodeValue = wt0[0].childNodes[0].nodeValue + wt[0].childNodes[0].nodeValue;
-                                wt0[0].childNodes[0].nodeValue = ""
-                                //wr[iwr - 1].remove();
+
+                                wt0[0].childNodes[0].nodeValue = wt0[0].childNodes[0].nodeValue + wt[0].childNodes[0].nodeValue;
+                                wt[0].childNodes[0].nodeValue = "";
 
                             }
 
