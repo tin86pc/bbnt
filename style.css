@@ -1,0 +1,45 @@
+body {
+  background-color: white;
+}
+
+.login {
+  width: 300px;
+  height: 300px;
+  border: 1px solid grey;
+  border-radius: 10px;
+  text-align: center;
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+h2 {
+  color: green;
+  font-family: sans-serif;
+}
+
+input {
+  width: 200px;
+  height: 40px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  border: 1px solid grey;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+button {
+  width: 200px;
+  height: 40px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  background-color: green;
+  color: white;
+  box-sizing: border-box;
+}
+
+button:hover {
+  font-size: 15px;
+}
