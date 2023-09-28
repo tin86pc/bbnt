@@ -1,8 +1,31 @@
+/* On screens that are 992px wide or less, go from four columns to two columns */
+@media screen and (max-width: 992px) {
+  .column {
+    width: 50%;
+  }
+}
+
+/* On screens that are 600px wide or less, make the columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .column {
+    width: 100%;
+  }
+}
+
+:root {
+  /* --MauChuDao: #075b69; */
+  --MauChuDao: #000000;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   background-color: white;
 }
 
-.login {
+.xacthuc {
   width: 300px;
   height: 300px;
   border: 1px solid grey;
@@ -16,7 +39,7 @@ body {
 }
 
 h2 {
-  color: green;
+  color: var(--MauChuDao);
   font-family: sans-serif;
 }
 
@@ -27,7 +50,6 @@ input {
   border-radius: 10px;
   border: 1px solid grey;
   text-align: center;
-  box-sizing: border-box;
 }
 
 button {
@@ -35,11 +57,37 @@ button {
   height: 40px;
   margin-bottom: 10px;
   border-radius: 10px;
-  background-color: green;
+  background-color: var(--MauChuDao);
   color: white;
-  box-sizing: border-box;
 }
 
 button:hover {
   font-size: 15px;
+}
+/* input file */
+.inputfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.inputfile + label {
+  font-size: 1.25em;
+  font-weight: 700;
+  color: white;
+  background-color: black;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.inputfile:focus + label,
+.inputfile + label:hover {
+  background-color: red;
+}
+
+.hidden {
+  display: none;
 }

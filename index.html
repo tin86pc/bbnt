@@ -5,21 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet" type="text/css" href="style-toast.css">
 
-
-    <script src="main.js"></script>
     <script src="ham.js"></script>
-
-
-    <!--Sử dụng thư viện md5-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/core.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/md5.js"></script>
+    <script src="main.js"></script>
 
     <title>bbnt</title>
-
 
 
 </head>
@@ -30,23 +22,33 @@
 
     <div id="snackbar">...</div>
 
-    <div class="login" id="login">
+
+    <div class="xacthuc" id="xacthuc">
         <h2>BBNT</h2>
-        <input type="text" id="email" placeholder="Email hoặc sđt">
-        <button onclick="NhanMaXacThuc()">Nhận mã xác thực</button>
-        <input type="text" name="" placeholder="Mã xác thực">
-        <button onclick="XacThuc()">Xác thực</button>
-
-
-
-
-
+        <input type="email" id="email" name="email" placeholder="Email">
+        <button type="button" id="btnNhaMa" onclick="NhanMaXacThuc()">Nhận mã xác thực</button>
+        <input type="text" id="maxacthuc" placeholder="Mã xác thực">
+        <button type="button" id="btnXacThuc" onclick="XacThuc()">Xác thực</button>
     </div>
 
 
 
 
+    <script>
+        document.getElementById("email").addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                document.getElementById("btnNhaMa").click();
+            }
+        });
+        document.getElementById("maxacthuc").addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                document.getElementById("btnXacThuc").click();
+            }
+        });
 
+    </script>
 
 
 
