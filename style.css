@@ -80,6 +80,10 @@ a:visited {
   border-radius: 10px;
 }
 
+a{
+  font-size:12px;
+}
+
 a:hover,
 a:active {
   background-color: red;
