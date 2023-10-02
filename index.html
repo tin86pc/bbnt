@@ -5,6 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- Tạo file doc -->
+    <script type="text/javascript" src="lib/FileSaver.js"></script>
+
+    <!-- test -->
+    <script type="text/javascript" src="lib/jszip.js"></script>
+
+    <!-- Đọc file excell -->
+    <script type="text/javascript" src="lib/xlsx.js"></script>
+
+
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet" type="text/css" href="style-toast.css">
 
@@ -22,15 +32,33 @@
 
     <div id="snackbar">...</div>
 
-
-    <div class="xacthuc" id="xacthuc">
+    <div class="xacthuc" id="xacthuc" style="display: none;">
         <h2>BBNT</h2>
         <input type="email" id="email" name="email" placeholder="Email">
-        <button type="button" id="btnNhaMa" onclick="NhanMaXacThuc()">Nhận mã xác thực</button>
+        <button id="btnNhaMa" onclick="NhanMaXacThuc()">Nhận mã xác thực</button>
         <input type="text" id="maxacthuc" placeholder="Mã xác thực">
-        <button type="button" id="btnXacThuc" onclick="XacThuc()">Xác thực</button>
+        <button id="btnXacThuc" onclick="XacThuc()">Xác thực</button>
+
+        <a target="_blank" href="//drive.google.com/drive/folders/1JONgUOcWYCA8wGDXsgtadAzVn7W85po9?usp=sharing">
+            Link tải form mẫu 1
+        </a>
+        <a target="_blank" href="//drive.google.com/drive/folders/1JONgUOcWYCA8wGDXsgtadAzVn7W85po9?usp=sharing">
+            Link tải form mẫu 2
+        </a>
+
     </div>
 
+    <div class="taifilelen" id="taifilelen">
+        <h2>Tải file mẫu lên</h2>
+        <input type="file" id="file" accept=".xlsx,.docx" multiple />
+        <button onclick="TaiFileLen()">Tải lên</button>
+    </div>
+
+    <div class="taifilexuong" id="taifilexuong" style="display: none;">
+        <h2>Tải file xuống</h2>
+        <textarea id="log"></textarea>
+        <button onclick="TaiFileXuong()">Tải xuống</button>
+    </div>
 
 
 
@@ -49,10 +77,6 @@
         });
 
     </script>
-
-
-
-
 
 
 </body>
