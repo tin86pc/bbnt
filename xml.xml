@@ -1,0 +1,42 @@
+<w:p w:rsidR="002E512D" w:rsidRPr="003958DB" w:rsidRDefault="002E512D" w:rsidP="00C63CDB">
+    <w:pPr>
+        <w:spacing w:line="300" w:lineRule="auto"/>
+        <w:rPr>
+        <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+        <w:sz w:val="26"/>
+        <w:szCs w:val="26"/>
+        <w:lang w:val="en-US"/>
+        </w:rPr>
+    </w:pPr>
+    <w:r w:rsidRPr="003958DB">
+        <w:rPr>
+        <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+        <w:color w:val="C00000"/>
+        <w:sz w:val="26"/>
+        <w:szCs w:val="26"/>
+        <w:lang w:val="en-US"/>
+        </w:rPr>
+        <w:t><%</w:t>
+    </w:r>
+
+    <w:r w:rsidR="000F60A7" w:rsidRPr="003958DB">
+    <w:rPr>
+    <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+    <w:color w:val="C00000"/>
+    <w:sz w:val="26"/>
+    <w:szCs w:val="26"/>
+    <w:lang w:val="en-US"/>
+    </w:rPr>
+    <w:t>c</w:t>
+    </w:r>
+    <w:r w:rsidRPr="003958DB">
+    <w:rPr>
+    <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+    <w:color w:val="C00000"/>
+    <w:sz w:val="26"/>
+    <w:szCs w:val="26"/>
+    <w:lang w:val="en-US"/>
+    </w:rPr>
+    <w:t>hủ đầu tư%></w:t>
+    </w:r>
+</w:p>

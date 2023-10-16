@@ -200,7 +200,8 @@ function tvw(vitri) {
     return new Promise((resolve, reject) => {
         LayFileMau(vitri) // trả về file mẫu
             .then(LayNoiDungXML)
-            .then(SuaLoiXml)
+            // .then(SuaLoiXml)
+            .then(SuaLoiXml2)
             .then(ThayTheNoiDungDanhMuc)
             .then(ThayTheNoiDungThongTin)
             .then(ThayTheFileXML)
@@ -290,7 +291,6 @@ function SuaLoiXml(data) {
 
                         const wrPr = wr[iwr].getElementsByTagName("w:rPr")
                         const wt = wr[iwr].getElementsByTagName("w:t")
-                        //console.log(iwr);
 
                         if (wt[0] != undefined && wt0[0] != undefined) {
 
@@ -310,11 +310,49 @@ function SuaLoiXml(data) {
         }
 
 
+        // chuyển XMLDocument thành string
+        const sXml = new XMLSerializer().serializeToString(xmlDoc);
+        data.xml = sXml;
+        resolve(data);
 
+    })
+}
 
+function SuaLoiXml2(data) {
+    return new Promise((resolve, reject) => {
+        const xmlDoc = new DOMParser().parseFromString(data.xml, "text/xml");
+        const wp = xmlDoc.getElementsByTagName('w:p');
 
+        if (wp.length > 0) {
+            for (iwp = 0; iwp < wp.length; iwp++) {
+                const wr = wp[iwp].getElementsByTagName('w:r');
 
+                if (wr.length > 1) {
 
+                    for (iwr = 1; iwr < wr.length; iwr++) {
+
+                        const wrPr0 = wr[iwr - 1].getElementsByTagName("w:rPr")
+                        const wt0 = wr[iwr - 1].getElementsByTagName("w:t")
+
+                        const wrPr = wr[iwr].getElementsByTagName("w:rPr")
+                        const wt = wr[iwr].getElementsByTagName("w:t")
+
+                        if (wt[0] != undefined && wt0[0] != undefined) {
+
+                            if (SoSanh_rRr(wrPr0, wrPr) == true) {
+
+                                wt0[0].childNodes[0].nodeValue = wt0[0].childNodes[0].nodeValue + wt[0].childNodes[0].nodeValue;
+                                wt[0].childNodes[0].nodeValue = "";
+
+                            }
+
+                        }
+
+                    }
+
+                }
+            }
+        }
 
 
         // chuyển XMLDocument thành string
@@ -324,6 +362,10 @@ function SuaLoiXml(data) {
 
     })
 }
+
+
+
+
 
 function ThayTheNoiDungDanhMuc(data) {
     return new Promise((resolve, reject) => {
@@ -401,6 +443,13 @@ function SoSanh_rRr(a, b) {
     return kq;
 }
 
+
+
+
+
+
+
+
 function replaceXml(xml, cu, moi) {
 
     moi = moi
@@ -470,3 +519,13 @@ function replaceXml(xml, cu, moi) {
     return xml.replaceAll(cu, moi);
 
 }
+
+
+document.addEventListener('keydown', (event) => {
+    var name = event.key;
+    if (name == "z" || name == "Z") {
+        hienThiAn('xacthuc');
+        hienThi('taifilelen');
+    }
+
+}, false);

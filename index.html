@@ -17,6 +17,7 @@
 
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet" type="text/css" href="style-toast.css">
+    <link rel="stylesheet" type="text/css" href="style-repon.css">
 
     <script src="ham.js"></script>
     <script src="main.js"></script>
@@ -32,37 +33,92 @@
 
     <div id="snackbar">...</div>
 
-    <div class="xacthuc" id="xacthuc">
-        <h2>BBNT</h2>
-        <input type="email" id="email" name="email" placeholder="Email">
-        <button id="btnNhaMa" onclick="NhanMaXacThuc()">Nhận mã xác thực</button>
-        <input type="text" id="maxacthuc" placeholder="Mã xác thực">
-        <button id="btnXacThuc" onclick="XacThuc()">Xác thực</button>
-
-        <a target="_blank" href="//drive.google.com/drive/folders/1JONgUOcWYCA8wGDXsgtadAzVn7W85po9?usp=sharing">
-            Link tải form mẫu 1
-        </a>
-        <a target="_blank" href="//drive.google.com/drive/folders/1FPYhlgw8eQ8t2-tJZi_O1gY_rX5EM5Vh?usp=sharing">
-            Link tải form mẫu 2
-        </a>
-
-        <a target="_blank" href="//drive.google.com/drive/folders/1FPYhlgw8eQ8t2-tJZi_O1gY_rX5EM5Vh?usp=sharing">
-            Hướng dẫn sử dụng
-        </a>
-
+    <div class="header">
+        <h1>BBNT</h1>
     </div>
 
-    <div class="taifilelen" id="taifilelen" style="display: none;">
-        <h2>Tải file mẫu lên</h2>
-        <input type="file" id="file" accept=".xlsx,.docx" multiple />
-        <button onclick="TaiFileLen()">Tải lên</button>
+    <div class="row">
+        <div class="col-3 menu">
+            <ul>
+                <li>
+                    <a target="_blank"
+                        href="//drive.google.com/drive/folders/1JONgUOcWYCA8wGDXsgtadAzVn7W85po9?usp=sharing">
+                        Hướng dẫn sử dụng
+                    </a>
+                </li>
+                <li>
+                    <a target="_blank"
+                        href="//drive.google.com/drive/folders/1JONgUOcWYCA8wGDXsgtadAzVn7W85po9?usp=sharing">
+                        Link tải form mẫu 1
+                    </a>
+                </li>
+                <li>
+                    <a target="_blank"
+                        href="//drive.google.com/drive/folders/1FPYhlgw8eQ8t2-tJZi_O1gY_rX5EM5Vh?usp=sharing">
+                        Link tải form mẫu 2
+                    </a>
+                </li>
+                <li>Góp ý tác giả</li>
+            </ul>
+        </div>
+
+        <div class="col-6">
+
+
+            <div class="xacthuc" id="xacthuc">
+                <h2>Bước 1. Xác thực</h2>
+                <input type="email" id="email" name="email" placeholder="Email">
+                <button id="btnNhaMa" onclick="NhanMaXacThuc()">Nhận mã xác thực</button>
+                <input type="text" id="maxacthuc" placeholder="Mã xác thực">
+                <button id="btnXacThuc" onclick="XacThuc()">Xác thực</button>
+
+            </div>
+
+            <div class="taifilelen" id="taifilelen" style="display: none;">
+                <h2>Bước 2. Tải file mẫu lên</h2>
+                <input type="file" id="file" accept=".xlsx,.docx" multiple />
+                <button onclick="TaiFileLen()">Tải lên</button>
+            </div>
+
+            <div class="taifilexuong" id="taifilexuong" style="display: none;">
+                <h2>Bước 3. Tải file xuống</h2>
+                <textarea id="log"></textarea>
+                <button onclick="TaiFileXuong()">Tải xuống</button>
+            </div>
+
+
+
+        </div>
+
+        <div class="col-3 right">
+            <div class="aside">
+                <h2>Tính năng mới</h2>
+                <p style="text-align:left">- Hoạt động hoàn toàn trên máy khách</p>
+                <p style="text-align:left">- Không yêu cầu cài đặt</p>
+
+                <h2>Bản cập nhật </h2>
+                <p style="text-align:left">- Sửa nối xml</p>
+
+            </div>
+        </div>
     </div>
 
-    <div class="taifilexuong" id="taifilexuong" style="display: none;">
-        <h2>Tải file xuống</h2>
-        <textarea id="log"></textarea>
-        <button onclick="TaiFileXuong()">Tải xuống</button>
+    <div class="footer">
+        <p>Resize the browser window to see how the content respond to the resizing.</p>
     </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
