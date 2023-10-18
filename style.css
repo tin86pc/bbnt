@@ -146,3 +146,19 @@ textarea {
   border: 1px solid grey;
   border-radius: 10px;
 }
+
+.header {
+  position: relative;
+}
+
+.header img {
+  width: 120px;
+}
+
+.header h1 {
+  position: absolute;
+  text-align: right;
+
+  top: -10px;
+  left: 170px;
+}
