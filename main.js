@@ -460,3 +460,12 @@ document.addEventListener('keydown', (event) => {
     }
 
 }, false);
+
+
+function GopY() {
+    hienThi('gopy');
+}
+
+function DongGopY() {
+    hienThiAn('gopy');
+}
