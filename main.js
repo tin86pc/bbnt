@@ -90,6 +90,7 @@ const TaiFileXuong = async () => {
         try {
             data = await tvw(vitri);
             ketxuat.file(data.tenF, data.blob);
+            log(data.tenF + "... ok")
         } catch (e) {
             log(e);
         }
@@ -121,7 +122,7 @@ function LayDuLieuTuFileExcell() {
                 return;
             }
             else {
-                log(`Đang xử lý ${files.length} file`)
+                log(`Đang xử lý ${files.length} file đầu vào`)
             }
         }
 
@@ -200,8 +201,7 @@ function tvw(vitri) {
     return new Promise((resolve, reject) => {
         LayFileMau(vitri) // trả về file mẫu
             .then(LayNoiDungXML)
-            // .then(SuaLoiXml)
-            .then(SuaLoiXml2)
+            .then(SuaLoiXml)
             .then(ThayTheNoiDungDanhMuc)
             .then(ThayTheNoiDungThongTin)
             .then(ThayTheFileXML)
@@ -211,6 +211,7 @@ function tvw(vitri) {
             })
 
             .catch((nd) => {
+                log(nd)
                 reject(nd)
             })
 
@@ -221,7 +222,6 @@ function tvw(vitri) {
 function LayFileMau(vitri) {
     const oDanhMuc = Json[dm][vitri];
     let tenFM = oDanhMuc[tenFileMau];
-    log(`Đang tìm file ${tenFM}`)
 
     return new Promise((resolve, reject) => {
         let files = document.getElementById('file').files;
@@ -240,7 +240,6 @@ function LayFileMau(vitri) {
         if (FileWord == undefined) {
             reject(`Không tìm thấy file mẫu ${tenFM}`);
         } else {
-            log(`Tìm thấy file ${tenFM}`);
 
             let zip = new JSZip();
             let word = zip.loadAsync(FileWord);
@@ -276,35 +275,47 @@ function LayNoiDungXML(data) {
 function SuaLoiXml(data) {
     return new Promise((resolve, reject) => {
         const xmlDoc = new DOMParser().parseFromString(data.xml, "text/xml");
-        const wp = xmlDoc.getElementsByTagName('w:p');
+        const wt = xmlDoc.getElementsByTagName('w:t');
 
-        if (wp.length > 0) {
-            for (iwp = 0; iwp < wp.length; iwp++) {
-                const wr = wp[iwp].getElementsByTagName('w:r');
+        // Gộp các nội dung bị tách
+        if (wt.length > 0) {
+            for (iwt = 0; iwt < wt.length; iwt++) {
 
-                if (wr.length > 1) {
-
-                    for (iwr = 1; iwr < wr.length; iwr++) {
-
-                        const wrPr0 = wr[iwr - 1].getElementsByTagName("w:rPr")
-                        const wt0 = wr[iwr - 1].getElementsByTagName("w:t")
-
-                        const wrPr = wr[iwr].getElementsByTagName("w:rPr")
-                        const wt = wr[iwr].getElementsByTagName("w:t")
-
-                        if (wt[0] != undefined && wt0[0] != undefined) {
-
-                            if (SoSanh_rRr(wrPr0, wrPr) == true) {
-
-                                wt0[0].childNodes[0].nodeValue = wt0[0].childNodes[0].nodeValue + wt[0].childNodes[0].nodeValue;
-                                wt[0].childNodes[0].nodeValue = "";
-
-                            }
-
+                if (wt[iwt].textContent.includes('<%') && !wt[iwt].textContent.includes('%>')) {
+                    for (i = 1; (iwt + i) < wt.length; i++) {
+                        if (wt[iwt + i].textContent.includes('%>')) {
+                            wt[iwt].textContent += wt[iwt + i].textContent;
+                            wt[iwt + i].textContent = " ";
+                            break;
                         }
-
+                        if (!wt[iwt + i].textContent == " ") {
+                            wt[iwt].textContent += wt[iwt + i].textContent;
+                            wt[iwt + i].textContent = " ";
+                        }
                     }
+                }
+            }
+        }
 
+
+        // xử lý < và % bị tách
+        if (wt.length > 0) {
+            for (iwt = 0; iwt < wt.length - 1; iwt++) {
+                if (wt[iwt].textContent[wt[iwt].textContent.length - 1] == "<" && wt[iwt + 1].textContent[0] == "%") {
+                    // console.log(wt[iwt]);
+                    wt[iwt].textContent += wt[iwt + 1].textContent;
+                    wt[iwt + 1].textContent = "";
+                }
+            }
+        }
+
+        // xử lý % và > bị tách
+        if (wt.length > 0) {
+            for (iwt = 0; iwt < wt.length - 1; iwt++) {
+                if (wt[iwt].textContent[wt[iwt].textContent.length - 1] == "%" && wt[iwt + 1].textContent[0] == ">") {
+                    // console.log(wt[iwt]);
+                    wt[iwt].textContent += wt[iwt + 1].textContent;
+                    wt[iwt + 1].textContent = "";
                 }
             }
         }
@@ -317,55 +328,6 @@ function SuaLoiXml(data) {
 
     })
 }
-
-function SuaLoiXml2(data) {
-    return new Promise((resolve, reject) => {
-        const xmlDoc = new DOMParser().parseFromString(data.xml, "text/xml");
-        const wp = xmlDoc.getElementsByTagName('w:p');
-
-        if (wp.length > 0) {
-            for (iwp = 0; iwp < wp.length; iwp++) {
-                const wr = wp[iwp].getElementsByTagName('w:r');
-
-                if (wr.length > 1) {
-
-                    for (iwr = 1; iwr < wr.length; iwr++) {
-
-                        const wrPr0 = wr[iwr - 1].getElementsByTagName("w:rPr")
-                        const wt0 = wr[iwr - 1].getElementsByTagName("w:t")
-
-                        const wrPr = wr[iwr].getElementsByTagName("w:rPr")
-                        const wt = wr[iwr].getElementsByTagName("w:t")
-
-                        if (wt[0] != undefined && wt0[0] != undefined) {
-
-                            if (SoSanh_rRr(wrPr0, wrPr) == true) {
-
-                                wt0[0].childNodes[0].nodeValue = wt0[0].childNodes[0].nodeValue + wt[0].childNodes[0].nodeValue;
-                                wt[0].childNodes[0].nodeValue = "";
-
-                            }
-
-                        }
-
-                    }
-
-                }
-            }
-        }
-
-
-        // chuyển XMLDocument thành string
-        const sXml = new XMLSerializer().serializeToString(xmlDoc);
-        data.xml = sXml;
-        resolve(data);
-
-    })
-}
-
-
-
-
 
 function ThayTheNoiDungDanhMuc(data) {
     return new Promise((resolve, reject) => {
@@ -418,37 +380,6 @@ function TaoFileWord(data) {
             });
     })
 }
-
-function SoSanh_rRr(a, b) {
-    //console.log('SoSanh_rRr');
-
-    let kq = true;
-
-    for (i = 0; i < a[0].childNodes.length; i++) {
-
-        const xa = new XMLSerializer().serializeToString(a[0].childNodes[i]);
-        //console.log(xa);
-
-        const xb = new XMLSerializer().serializeToString(b[0].childNodes[i]);
-        //console.log(xb);
-
-        if (xa !== xb) {
-            kq = false
-            return;
-        }
-
-    }
-    //console.log("true");
-
-    return kq;
-}
-
-
-
-
-
-
-
 
 function replaceXml(xml, cu, moi) {
 
@@ -523,7 +454,7 @@ function replaceXml(xml, cu, moi) {
 
 document.addEventListener('keydown', (event) => {
     var name = event.key;
-    if (name == "z" || name == "Z") {
+    if (name == "q" || name == "Q") {
         hienThiAn('xacthuc');
         hienThi('taifilelen');
     }
