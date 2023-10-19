@@ -20,7 +20,7 @@ const NhanMaXacThuc = async () => {
 
     obj.email = email;
     const nd = `?email=${email}&mxt=0`
-    let appScript = "https://script.google.com/macros/s/AKfycbxVpUqWh4BYyN8f1cQTF8yZqtVXXknVD8kzlorPrPitGb2qwcnM4UYYc_FBwEuzD6ZHZQ/exec"
+    let appScript = "https://script.google.com/macros/s/AKfycbyCrVKAdv3NgFkXg_dClsSebS36husGSs_HmOSURhK8A9ctfApmHBYq94OWmk6iC2WPNQ/exec"
 
     appScript = appScript + nd;
 
