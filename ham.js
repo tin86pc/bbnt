@@ -22,6 +22,7 @@ function hienThiAn(eid,) {
 }
 
 function log(s) {
+    console.log(s);
     var textarea = document.getElementById('log');
     textarea.value += '> ' + s + '\n';
     textarea.scrollTop = textarea.scrollHeight;

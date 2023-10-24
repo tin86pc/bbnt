@@ -92,7 +92,7 @@ const TaiFileXuong = async () => {
             ketxuat.file(data.tenF, data.blob);
             log(data.tenF + "... ok")
         } catch (e) {
-            log(e);
+            log("TaiFileXuong " + e);
         }
     }
 
@@ -231,8 +231,12 @@ function LayFileMau(vitri) {
 
         for (let i = 0; i < files.length; i++) {
             // Tìm file mẫu
-            if (files[i].name.toUpperCase() === tenFM.toUpperCase()) {
-                FileWord = files[i];
+            if (files[i].name === undefined || tenFM === undefined) {
+                log("lỗi file excell ")
+            } else {
+                if (files[i].name.toUpperCase() == tenFM.toUpperCase()) {
+                    FileWord = files[i];
+                }
             }
         }
 
