@@ -1,7 +1,6 @@
 const obj = {}
 
-const tenFile = 'Tên file';// Tên file đầu ra
-const tenFileMau = 'Tên file mẫu'// Tên file mẫu
+
 
 const NhanMaXacThuc = async () => {
     const email = document.getElementById('email').value
@@ -92,7 +91,7 @@ const TaiFileXuong = async () => {
             ketxuat.file(data.tenF, data.blob);
             log(data.tenF + "... ok")
         } catch (e) {
-            log("TaiFileXuong " + e);
+            log(e);
         }
     }
 
@@ -182,6 +181,7 @@ function LayDuLieuTuFileExcell() {
                 }
                 danhMuc[dm] = roaDanhMuc;
 
+
                 // Gom vào 1 đối tượng
                 let o = {
                     ...arrThongTin,
@@ -219,6 +219,10 @@ function tvw(vitri) {
 
 }
 
+const tenFile = 'Tên file';// Tên file đầu ra
+const tenFileMau = 'Tên file mẫu'// Tên file mẫu
+
+
 function LayFileMau(vitri) {
     const oDanhMuc = Json[dm][vitri];
     let tenFM = oDanhMuc[tenFileMau];
@@ -229,15 +233,19 @@ function LayFileMau(vitri) {
         // lấy ra file word mẫu trong các file đã chọn
         let FileWord;
 
+        // Lấy ra tên file đầu ra
+        let tenF = Json[dm][vitri][tenFile];
+
         for (let i = 0; i < files.length; i++) {
             // Tìm file mẫu
-            if (files[i].name === undefined || tenFM === undefined) {
-                log("lỗi file excell ")
-            } else {
-                if (files[i].name.toUpperCase() == tenFM.toUpperCase()) {
-                    FileWord = files[i];
-                }
+            if (tenF == undefined) {
+                reject(`Trong cột sheet "${dm}" cần đặt lại cho chính xác là "${tenFile}"`)
+            } else if (tenFM == undefined) {
+                reject(`Trong cột sheet "${dm}" cần đặt lại cho chính xác là "${tenFileMau}"`)
+            } else if (files[i].name.toUpperCase() == tenFM.toUpperCase()) {
+                FileWord = files[i];
             }
+
         }
 
         // Thông báo lỗi không tìm thấy file mẫu
@@ -247,7 +255,7 @@ function LayFileMau(vitri) {
 
             let zip = new JSZip();
             let word = zip.loadAsync(FileWord);
-            let tenF = Json[dm][vitri][tenFile];
+
 
             const data = {
                 vitri: vitri,
