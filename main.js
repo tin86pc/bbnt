@@ -85,18 +85,29 @@ const TaiFileXuong = async () => {
 
     var zipCha = new JSZip();
     var ketxuat = zipCha.folder("ket xuat");
+    let slbb = 0;
+    let slbbl = 0;
     for (vitri = 0; vitri < length; vitri++) {
         try {
             data = await tvw(vitri);
             ketxuat.file(data.tenF, data.blob);
             log(data.tenF + "... ok")
+            slbb++;
+
         } catch (e) {
+            slbbl++;
             log(e);
         }
     }
 
-    var textarea = document.getElementById('log');
-    zipCha.file("Ghi chu.txt", textarea.value);
+    log(`Tạo được ${slbb}/${length} biên bản`)
+    log(`Số lượng biên bản lỗi ${slbbl}`);
+
+    var textarea = document.getElementById('log').value;
+
+    let ndlog = "> Phiên bản BBNT V2\n" + textarea;
+
+    zipCha.file("Ghi chu.txt", ndlog);
 
     zipCha.generateAsync({ type: "blob" })
         .then(function (content) {
@@ -464,6 +475,8 @@ function replaceXml(xml, cu, moi) {
 }
 
 
+
+
 document.addEventListener('keydown', (event) => {
     var name = event.key;
     if (name == "q" || name == "Q") {
@@ -480,4 +493,15 @@ function GopY() {
 
 function DongGopY() {
     hienThiAn('gopy');
+}
+
+
+const SoSanhChuoi = (a, b) => {
+    a = a.replace(/\s/g, '');
+    b = b.replace(/\s/g, '');
+    if (a.toUpperCase() === b.toUpperCase()) {
+        return true;
+    } else {
+        return false;
+    }
 }
