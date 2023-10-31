@@ -352,12 +352,17 @@ function SuaLoiXml(data) {
     })
 }
 
+
 function ThayTheNoiDungDanhMuc(data) {
     return new Promise((resolve, reject) => {
         for (const [key, value] of Object.entries(Json[dm][data.vitri])) {
             let cu = key.toString();
             let moi = value.toString();
-            data.xml = replaceXml(data.xml, cu, moi);
+
+            if (cu.includes('<%') && cu.includes('%>')) {
+                data.xml = replaceXml(data.xml, cu, moi);
+            }
+
         }
 
         resolve(data);
@@ -370,7 +375,14 @@ function ThayTheNoiDungThongTin(data) {
         arrThongTin.forEach(element => {
             let cu = Object.keys(element).toString();
             let moi = Object.values(element).toString();
-            data.xml = replaceXml(data.xml, cu, moi);
+
+            if (cu.includes('<%') && cu.includes('%>')) {
+                data.xml = replaceXml(data.xml, cu, moi);
+            }
+
+
+
+
         });
 
         resolve(data);
@@ -473,8 +485,6 @@ function replaceXml(xml, cu, moi) {
     return xml.replaceAll(cu, moi);
 
 }
-
-
 
 
 document.addEventListener('keydown', (event) => {
