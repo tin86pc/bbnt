@@ -469,22 +469,20 @@ function replaceXml(xml, cu, moi) {
                 aXml[c] = aXml[c] + s;
             }
 
-
         }
 
         let nd = ""
         aXml.forEach(element => {
             nd += element.trim();
         });
-
-        //ht(nd);
-
         return nd;
     }
 
-    return xml.replaceAll(cu, moi);
+    // return xml.replaceAll(cu, moi);
+    return replaceAll2(xml, cu, moi);
 
 }
+
 
 
 document.addEventListener('keydown', (event) => {
@@ -506,12 +504,164 @@ function DongGopY() {
 }
 
 
-const SoSanhChuoi = (a, b) => {
-    a = a.replace(/\s/g, '');
-    b = b.replace(/\s/g, '');
-    if (a.toUpperCase() === b.toUpperCase()) {
-        return true;
-    } else {
-        return false;
+
+
+
+const s = " 22<%1  2          3%> a  <1  2           3> b   <1  2  3> c <1  2  3> d"
+
+xlc(s, "<%", "%>")
+
+
+function xlc(goc, dau, cuoi) {
+    var re = new RegExp(stringToRegex(`/${dau}(.*?)${cuoi}/`));
+    var result = goc.split(re);
+
+    for (i = 0; i < result.length; i++) {
+        if (i % 2 !== 0) {
+            result[i] = dau + result[i] + cuoi
+            result[i] = result[i].replace(/ +/g, ' ')
+        }
     }
+    const kq = result.join('').toString();
+    // console.log(kq);
+
+    return kq;
 }
+
+
+function stringToRegex(str) {
+    const match = str.match(/^([\/~@;%#'])(.*?)\1([gimsuy]*)$/);
+    return match ?
+        new RegExp(
+            match[2],
+            match[3]
+
+                .split('')
+                .filter((char, pos, flagArr) => flagArr.indexOf(char) === pos)
+                .join('')
+        )
+        : new RegExp(str);
+}
+
+
+function replaceAll2(goc, cu, moi) {
+    // xóa bỏ dấu cách trùng lặp
+    goc = xlc(goc, "<%", "%>")
+
+
+    cu = cu.replace(/ +/g, ' ')
+
+    // thay thế tất cả không phân biệt chữ hoa chữ thường
+    // thay thế lặp lại
+    var re = new RegExp(cu, "gi");
+
+    return goc.replace(re, moi);
+}
+
+
+function ThayTheNoiDungDanhMuc2(data) {
+    return new Promise((resolve, reject) => {
+        const xmlDoc = new DOMParser().parseFromString(data.xml, "text/xml");
+        const wp = xmlDoc.getElementsByTagName('w:p');
+
+        for (const [key, value] of Object.entries(Json[dm][data.vitri])) {
+            let cu = key.toString();
+            let moi = value.toString();
+
+            if (cu.includes('<%') && cu.includes('%>')) {
+                if (wp.length > 0) {
+                    for (iwp = 0; iwp < wp.length; iwp++) {
+
+                        if (wp[iwp].textContent.includes('<%') && wp[iwp].textContent.includes('%>')) {
+                            let aMoi = moi.split(/\r\n|\n|\r/);
+                            console.log(aMoi.length);
+                            if (aMoi.length > 1) {
+                                for (iaMoi = 0; iaMoi < iaMoi.length; iaMoi++) {
+
+                                    console.log(aMoi);
+
+
+                                    let newWp = wp[iwp];
+
+
+
+                                    //wp[iwp].insertAfterElement("afterend", newWp);
+                                }
+                            }
+                            else {
+                                wp[iwp].textContent = wp[iwp].textContent.replaceAll(cu, moi);
+                            }
+
+                        }
+                    }
+                }
+            }
+
+        }
+
+        // chuyển XMLDocument thành string
+        const sXml = new XMLSerializer().serializeToString(xmlDoc);
+        data.xml = sXml;
+        resolve(data);
+    })
+}
+
+function ThayTheNoiDungThongTin2(data) {
+    return new Promise((resolve, reject) => {
+        const xmlDoc = new DOMParser().parseFromString(data.xml, "text/xml");
+        const wp = xmlDoc.getElementsByTagName('w:p');
+
+        const arrThongTin = Json[tt];
+        arrThongTin.forEach(element => {
+            let cu = Object.keys(element).toString();
+            let moi = Object.values(element).toString();
+
+
+            if (cu.includes('<%') && cu.includes('%>')) {
+                if (wp.length > 0) {
+                    for (iwp = 0; iwp < wp.length; iwp++) {
+
+                        if (wp[iwp].textContent.includes('<%') && wp[iwp].textContent.includes('%>')) {
+                            let aMoi = moi.split(/\r\n|\n|\r/);
+
+                            if (aMoi.length > 1) {
+                                for (iaMoi = 0; iaMoi < iaMoi.length; iaMoi++) {
+
+                                    console.log(aMoi);
+
+
+                                    let newWp = wp[iwp];
+                                    console.log(newWp);
+
+
+
+                                    wp[iwp].insertAfterElement("afterend", newWp);
+                                }
+                            }
+                            else {
+                                wp[iwp].textContent = wp[iwp].textContent.replaceAll(cu, moi);
+                            }
+
+                        }
+                    }
+                }
+            }
+
+
+
+        });
+
+
+
+        // chuyển XMLDocument thành string
+        const sXml = new XMLSerializer().serializeToString(xmlDoc);
+        data.xml = sXml;
+        resolve(data);
+    })
+}
+
+
+
+
+
+
