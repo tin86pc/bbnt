@@ -19,6 +19,7 @@ const NhanMaXacThuc = async () => {
     obj.email = email;
     const nd = `?email=${email}&mxt=0`
 
+    // lấy đường link appScript
     let appScript = appScriptJson.bbntXacThuc;
 
     appScript = appScript + nd;
@@ -28,6 +29,10 @@ const NhanMaXacThuc = async () => {
         .then(d => {
             const Email = d[0].email;
             obj.mxt = d[0].mxt;
+
+            // thêm mã xác thực vào bộ nhớ
+            themMaXacThuc(obj.mxt);
+
             Toast(`Mã xác thực đã gửi thành công đến email ${Email}`);
             document.getElementById('maxacthuc').focus();
         })
@@ -44,6 +49,10 @@ const XacThuc = async () => {
         obj.on = true;
     }
 
+    if (ktXacThuc(maxacthuc.value)) {
+        obj.on = true;
+    }
+
     if (obj.on == true) {
         await delay(1000)
         maxacthuc.value = ""
@@ -55,11 +64,7 @@ const XacThuc = async () => {
 
     }
     else {
-        if (obj.email == undefined) {
-            Toast(`Bạn chưa nhận mã xác thực`)
-        } else {
-            Toast(`Mã xác thực không đúng cần truy cập vào email ${obj.email} để lấy`)
-        }
+        Toast(`Mã xác thực không đúng cần truy cập vào email để lấy`)
     }
 
 }

@@ -10,7 +10,7 @@ const LayJson = async () => {
 
 
             appScriptJson = JSON.parse(s);
-            console.log('ok');
+            // console.log('bbnt xin chào !');
         })
         .catch(() => {
             console.log('lỗi file Json');
